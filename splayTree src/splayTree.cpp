@@ -78,7 +78,7 @@ private:
         splay(p);
         right->parent = p;
         p->right = right;
-        return p ;
+        return p;
     }
 
     void print(NodePtr root, string indent, bool last) {
@@ -160,6 +160,21 @@ private:
         }
     }
 
+public:
+    SplayTree() {
+        root = nullptr;
+    }
+
+    NodePtr findKey(int k) {
+        NodePtr x = searchTree(this->root, k);
+        if (x != nullptr)
+            splay(x);
+        return x;
+    }
+
+    void insert(int k) {
+
+    }
 
 };
 
