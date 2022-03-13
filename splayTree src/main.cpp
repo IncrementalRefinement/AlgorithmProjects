@@ -9,16 +9,128 @@ struct Node {
     Node *right;
 };
 
-typedef Node * NodePtr;
+typedef Node *NodePtr;
 
-class SplayTree{
+class SplayTree {
 private:
     NodePtr root;
 
+    NodePtr searchTree(NodePtr node, int key) {
+        if (node == nullptr || key == node->data) {
+            return node;
+        }
+        if (key < node->data) {
+            return searchTree(node->left, key);
+        } else {
+            return searchTree(node->right, key);
+        }
+    }
+
+    void deleteNode(NodePtr node, int key) {
+        NodePtr x = nullptr;
+        NodePtr t, s;
+        //find node
+        while (node != nullptr) {
+            if (node->data == key) {
+                x = node;
+            }
+            if (node->data <= key) {
+                node = node->right;
+            } else {
+                node = node->left;
+            }
+        }
+        if (x == nullptr) {
+            cout << "Couldn't find key in the tree" << endl;
+            return;
+        }
+        // split to s, t two subTree
+//        split
+    }
+
+    void print(NodePtr root, string indent, bool last) {
+        if (root != nullptr) {
+            cout << indent;
+            if (last) {
+                cout << "└────";
+                indent += "";
+            } else {
+                cout << "├────";
+                indent += "|    ";
+            }
+            cout << root->data << endl;
+            print(root->left, indent, false);
+            print(root->right, indent, true);
+        }
+    }
+
+    void leftRotate(NodePtr x) {
+        NodePtr y = x->right;
+        x->right = y->left;
+        if (y->left != nullptr) {
+            y->left->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == nullptr) {
+            this->root = y;
+        } else if (x == x->parent->left) {
+            x->parent->left = y;
+        } else {
+            x->parent->right = y;
+        }
+        y->left = x;
+        x->parent = y;
+    }
+
+    void rightRotate(NodePtr x) {
+        NodePtr y = x->left;
+        x->left = y->right;
+        if (y->right != nullptr) {
+            y->right->parent = x;
+        }
+        y->parent = x->parent;
+        if (x->parent == nullptr) {
+            this->root = y;
+        } else if (x == x->parent->left) {
+            x->parent->left = y;
+        } else {
+            x->parent->right = y;
+        }
+        y->right = x;
+        x->parent = y;
+    }
+
+    void splay(NodePtr x) {
+        while (x->parent != nullptr) {
+            if (x->parent->parent == nullptr) {
+                // x paretn is root
+                if (x == x->parent->left) {
+                    rightRotate(x->parent);
+                    //zig rotation
+                } else {
+                    //zag rotation
+                    leftRotate(x->parent);
+                }
+            }
+            else if(x == x->parent->left && x->parent == x->parent->parent->left){
+                rightRotate(x->parent->parent);
+                rightRotate(x->parent);
+            }
+            else if(x == x->parent->left && x->parent == x->parent->parent->right){
+                rightRotate(x->parent);
+                leftRotate(x->parent);
+            }else if(x == x->parent->right && x->parent == x->parent->parent->right){
+                leftRotate(x->parent->parent);
+                leftRotate(x->parent);
+            }else{
+                leftRotate(x->parent);
+                rightRotate(x->parent);
+            }
+        }
+    }
+
 
 };
-
-
 
 
 int main() {
