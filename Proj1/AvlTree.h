@@ -42,6 +42,14 @@ private:
     AvlTreeNode *leftRotate(AvlTreeNode *node);
 
     AvlTreeNode *rightRotate(AvlTreeNode *node);
+
+    void updateHeight(AvlTreeNode *node);
+
+    void checkRep(AvlTreeNode *node);
+
+    int getHeight(AvlTreeNode *node);
+
+    bool isUnbalance(AvlTreeNode *node);
 };
 
 #endif //PROJ1_AVLTREE_H
