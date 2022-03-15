@@ -10,3 +10,9 @@ add_executable(Proj1
         BST.h
         BST_test.cpp
         )
+
+add_executable(Proj2
+        AvlTree.cpp
+        AvlTree.h
+        AvlTreeTest.cpp
+        )
