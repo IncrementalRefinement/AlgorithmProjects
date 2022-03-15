@@ -26,6 +26,8 @@ public:
 
     bool Query(int);
 
+    void checkRep();
+
 private:
     bool Query(AvlTreeNode *node, int key);
 

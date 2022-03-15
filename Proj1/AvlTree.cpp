@@ -28,6 +28,7 @@ bool AvlTree::Query(AvlTree::AvlTreeNode *node, int key) {
     return false;
 }
 
+
 AvlTree::AvlTreeNode *AvlTree::Delete(AvlTree::AvlTreeNode *node, int key) {
     return nullptr;
 }
@@ -50,4 +51,8 @@ AvlTree::AvlTreeNode *AvlTree::leftRotate(AvlTree::AvlTreeNode *node) {
 
 AvlTree::AvlTreeNode *AvlTree::rightRotate(AvlTree::AvlTreeNode *node) {
     return nullptr;
+}
+
+void AvlTree::checkRep() {
+
 }
