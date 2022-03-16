@@ -47,15 +47,20 @@ bool AvlTree::Query(AvlTree::AvlTreeNode *node, int key) {
 AvlTree::AvlTreeNode *AvlTree::Delete(AvlTree::AvlTreeNode *node, int key) {
     if (node->key == key) {
         if (node->left == nullptr && node->right == nullptr) {
+            delete node;
             return nullptr;
         } else if (node->left != nullptr && node->right != nullptr) {
             int newKey = FindMinValue(node->right);
             node->key = newKey;
             node->right = Delete(node->right, newKey);
         } else if (node->left != nullptr) {
-            node = node->left;
+            AvlTreeNode *temp = node->left;
+            delete node;
+            node = temp;
         } else {
-            node = node->right;
+            AvlTreeNode *temp = node->right;
+            delete node;
+            node = temp;
         }
     } else if (key < node->key) {
         node->left = Delete(node->left, key);

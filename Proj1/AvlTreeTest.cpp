@@ -5,7 +5,6 @@
 #include <iostream>
 #include <algorithm>
 #include <cassert>
-#include <array>
 #include <random>
 #include <chrono>
 
