@@ -43,16 +43,21 @@ BST::BSTNode *BST::Delete(BST::BSTNode *node, int key) {
     if (node == nullptr) return nullptr;
     if (node->key == key) {
         if (node->left == nullptr && node->right == nullptr) {
+            delete node;
             return nullptr;
         } else if (node->left != nullptr && node->right != nullptr) {
             int newKey = FindMinValue(node->right);
             node->key = newKey;
-            Delete(node->right, newKey);
+            node->right = Delete(node->right, newKey);
             return node;
         } else if (node->left != nullptr) {
-            return node->left;
+            BSTNode *ret = node->left;
+            delete node;
+            return ret;
         } else {
-            return node->right;
+            BSTNode *ret = node->right;
+            delete node;
+            return ret;
         }
     } else if (node->key < key) {
         node->right = Delete(node->right, key);
