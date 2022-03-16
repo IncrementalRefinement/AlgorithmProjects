@@ -34,9 +34,9 @@ bool AvlTree::Query(int key) {
 
 bool AvlTree::Query(AvlTree::AvlTreeNode *node, int key) {
     if (node == nullptr) return false;
-    if (key == root->key) {
+    if (key == node->key) {
         return true;
-    } else if (key > root->key) {
+    } else if (key > node->key) {
         return Query(node->right, key);
     } else {
         return Query(node->left, key);
@@ -91,18 +91,15 @@ AvlTree::AvlTreeNode *AvlTree::rotateIfNecessary(AvlTree::AvlTreeNode *node) {
         if (node->leftDepth > node->rightDepth) {
             if (node->left->leftDepth < node->left->rightDepth) {
                 node->left = leftRotate(node->left);
-                updateHeight(node->left);
             }
             node = rightRotate(node);
         } else {
             if (node->right->leftDepth > node->right->rightDepth) {
                 node->right = rightRotate(node->right);
-                updateHeight(node->right);
             }
             node = leftRotate(node);
         }
     }
-    updateHeight(node);
     return node;
 }
 
@@ -110,6 +107,8 @@ AvlTree::AvlTreeNode *AvlTree::leftRotate(AvlTree::AvlTreeNode *node) {
     AvlTreeNode *v = node->right;
     node->right = v->left;
     v->left = node;
+    updateHeight(node);
+    updateHeight(v);
     return v;
 }
 
@@ -117,6 +116,8 @@ AvlTree::AvlTreeNode *AvlTree::rightRotate(AvlTree::AvlTreeNode *node) {
    AvlTreeNode *v = node->left;
    node->left = v->right;
    v->right = node;
+    updateHeight(node);
+    updateHeight(v);
    return v;
 }
 
