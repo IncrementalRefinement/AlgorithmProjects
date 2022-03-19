@@ -134,14 +134,14 @@ public:
         root = nullptr;
     }
 
-    NodePtr findKey(int k) {
+    NodePtr Query(int k) {
         NodePtr x = searchTree(this->root, k);
         if (x != nullptr)
             splay(x);
         return x;
     }
 
-    void insert(int key) {
+    void Insert(int key) {
         NodePtr node = new Node();
         node->parent = nullptr;
         node->left = nullptr;
@@ -168,7 +168,7 @@ public:
         splay(node);
     }
 
-    void deleteKey(int key) {
+    void Delete(int key) {
         NodePtr x = nullptr;
         NodePtr t = nullptr;
         NodePtr s = nullptr;
@@ -208,27 +208,27 @@ public:
 
 int main() {
     SplayTree bst;
-    bst.insert(33);
-    bst.insert(44);
-    bst.insert(67);
-    bst.insert(5);
-    bst.insert(89);
-    bst.insert(41);
-    bst.insert(98);
-    bst.insert(1);
+    bst.Insert(33);
+    bst.Insert(44);
+    bst.Insert(67);
+    bst.Insert(5);
+    bst.Insert(89);
+    bst.Insert(41);
+    bst.Insert(98);
+    bst.Insert(1);
     bst.print(bst.root);
-    bst.findKey(33);
-    bst.findKey(44);
+    bst.Query(33);
+    bst.Query(44);
     bst.print(bst.root);
-    bst.deleteKey(89);
-    bst.deleteKey(67);
-    bst.deleteKey(41);
-    bst.deleteKey(5);
+    bst.Delete(89);
+    bst.Delete(67);
+    bst.Delete(41);
+    bst.Delete(5);
     bst.print(bst.root);
-    bst.deleteKey(98);
-    bst.deleteKey(1);
-    bst.deleteKey(44);
-    bst.deleteKey(33);
+    bst.Delete(98);
+    bst.Delete(1);
+    bst.Delete(44);
+    bst.Delete(33);
     bst.print(bst.root);
     return 0;
 }
