@@ -16,3 +16,9 @@ add_executable(Proj2
         AvlTree.h
         AvlTreeTest.cpp
         )
+
+add_executable(Proj3
+        ./RBT/RBT.h
+        ./RBT/RBT.cpp
+        ./RBT/RBT_Test.cpp
+        )
