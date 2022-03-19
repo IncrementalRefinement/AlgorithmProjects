@@ -1,4 +1,6 @@
 #include <iostream>
+#include <string>
+#include <queue>
 
 using namespace std;
 
@@ -13,7 +15,7 @@ typedef Node *NodePtr;
 
 class SplayTree {
 private:
-    NodePtr root;
+
 
     NodePtr searchTree(NodePtr node, int key) {
         if (node == nullptr || key == node->data) {
@@ -26,35 +28,8 @@ private:
         }
     }
 
-    void deleteNode(NodePtr node, int key) {
-        NodePtr x = nullptr;
-        NodePtr t, s;
-        //find node
-        while (node != nullptr) {
-            if (node->data == key) {
-                x = node;
-            }
-            if (node->data <= key) {
-                node = node->right;
-            } else {
-                node = node->left;
-            }
-        }
-        if (x == nullptr) {
-            cout << "Couldn't find key in the tree" << endl;
-            return;
-        }
-        // split to s, t two subTree
-        split(x, s, t);
-        if (s->left != nullptr) {
-            s->left->parent = nullptr;// remove x
-        }
-        this->root = join(s->left, t);
-        delete (s);
-        s = nullptr;
-    }
 
-    void split(NodePtr x, NodePtr s, NodePtr t) {
+    void split(NodePtr& x, NodePtr &s, NodePtr& t) {
         splay(x);
         t = x->right;
         s = x;
@@ -81,21 +56,6 @@ private:
         return p;
     }
 
-    void print(NodePtr root, string indent, bool last) {
-        if (root != nullptr) {
-            cout << indent;
-            if (last) {
-                cout << "└────";
-                indent += "";
-            } else {
-                cout << "├────";
-                indent += "|    ";
-            }
-            cout << root->data << endl;
-            print(root->left, indent, false);
-            print(root->right, indent, true);
-        }
-    }
 
     void leftRotate(NodePtr x) {
         NodePtr y = x->right;
@@ -133,6 +93,13 @@ private:
         x->parent = y;
     }
 
+    string serailize(NodePtr root) {
+        if (root == nullptr) {
+            return "#";
+        }
+        return to_string(root->data) + ' ' + serailize(root->left) + ' ' + serailize(root->right);
+    }
+
     void splay(NodePtr x) {
         while (x->parent != nullptr) {
             if (x->parent->parent == nullptr) {
@@ -161,6 +128,8 @@ private:
     }
 
 public:
+    NodePtr root;
+
     SplayTree() {
         root = nullptr;
     }
@@ -172,14 +141,94 @@ public:
         return x;
     }
 
-    void insert(int k) {
-
+    void insert(int key) {
+        NodePtr node = new Node();
+        node->parent = nullptr;
+        node->left = nullptr;
+        node->right = nullptr;
+        node->data = key;
+        NodePtr ancestor = nullptr;
+        NodePtr p = root;
+        while (p != nullptr) {
+            ancestor = p;
+            if (p->data > node->data) {
+                p = p->left;
+            } else {
+                p = p->right;
+            }
+        }
+        node->parent = ancestor;
+        if (ancestor == nullptr) {
+            root = node;
+        } else if (ancestor->data > node->data) {
+            ancestor->left = node;
+        } else {
+            ancestor->right = node;
+        }
+        splay(node);
     }
 
+    void deleteKey(int key) {
+        NodePtr x = nullptr;
+        NodePtr t = nullptr;
+        NodePtr s = nullptr;
+        NodePtr node = root;
+        //find node
+        while (node != nullptr) {
+            if (node->data == key) {
+                x = node;
+                break;
+            }
+            if (node->data <= key) {
+                node = node->right;
+            } else {
+                node = node->left;
+            }
+        }
+        if (x == nullptr) {
+            cout << "Couldn't find key in the tree" << endl;
+            return;
+        }
+        // split to s, t two subTree
+        split(x, s, t);
+        if (s->left != nullptr) {
+            s->left->parent = nullptr;// remove x
+        }
+        this->root = join(s->left, t);
+        delete (s);
+        s = nullptr;
+    }
+
+    void print(NodePtr root) {
+        cout << serailize(root) << endl;
+        return;
+    }
 };
 
 
 int main() {
-    std::cout << "Hello, World!" << std::endl;
+    SplayTree bst;
+    bst.insert(33);
+    bst.insert(44);
+    bst.insert(67);
+    bst.insert(5);
+    bst.insert(89);
+    bst.insert(41);
+    bst.insert(98);
+    bst.insert(1);
+    bst.print(bst.root);
+    bst.findKey(33);
+    bst.findKey(44);
+    bst.print(bst.root);
+    bst.deleteKey(89);
+    bst.deleteKey(67);
+    bst.deleteKey(41);
+    bst.deleteKey(5);
+    bst.print(bst.root);
+    bst.deleteKey(98);
+    bst.deleteKey(1);
+    bst.deleteKey(44);
+    bst.deleteKey(33);
+    bst.print(bst.root);
     return 0;
 }
