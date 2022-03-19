@@ -18,7 +18,7 @@ void sanityTest() {
     }
 
     for (int i = 0; i < 1000; i++) {
-        assert(!RBT_Query(theTree, i));
+        assert(RBT_Query(theTree, i) == NULL);
     }
 
     std::cout << "Passed sanity test" << std::endl;
