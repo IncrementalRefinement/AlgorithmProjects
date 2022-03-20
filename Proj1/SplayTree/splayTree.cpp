@@ -13,10 +13,9 @@ struct Node {
 
 typedef Node *NodePtr;
 
+
 class SplayTree {
 private:
-
-
     NodePtr searchTree(NodePtr node, int key) {
         if (node == nullptr || key == node->data) {
             return node;
@@ -136,11 +135,11 @@ public:
 
     NodePtr Query(int k) {
         NodePtr x = searchTree(this->root, k);
+
         if (x != nullptr)
             splay(x);
         return x;
     }
-
     void Insert(int key) {
         NodePtr node = new Node();
         node->parent = nullptr;
@@ -204,7 +203,6 @@ public:
         return;
     }
 };
-
 
 int main() {
     SplayTree bst;
