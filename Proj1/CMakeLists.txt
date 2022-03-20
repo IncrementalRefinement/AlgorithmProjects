@@ -18,12 +18,19 @@ add_executable(AvlTree_test
         )
 
 add_executable(RBT_Test
-        RBT/RBT.h
-        RBT/RBT.cpp
+        RBT/RedBlackTree.h
         RBT/RBT_Test.cpp
         )
 
 add_executable(SplayTree_Test
         SplayTree/splayTree.h
         SplayTree/splayTree.cpp
+        )
+
+add_executable(OverallTest
+        BST/BST.h
+        BST/BST.cpp
+        AvlTree/AvlTree.h
+        AvlTree/AvlTree.cpp
+        OverallTest.cpp
         )
