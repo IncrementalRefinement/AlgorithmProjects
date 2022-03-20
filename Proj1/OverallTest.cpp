@@ -302,7 +302,7 @@ vector<string>TestSkewedQuery(int N) {
         avlTree.Query(item);
     }
     end_time = std::chrono::high_resolution_clock::now();
-    (end_time - begin_time).count();
+    delta_time = (end_time - begin_time).count();
     ret.push_back(to_string(N) + ";" + "AvlTree" + ";" + to_string(delta_time));
 
     return ret;
