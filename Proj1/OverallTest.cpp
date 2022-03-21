@@ -11,10 +11,10 @@
 #include <chrono>
 #include <random>
 
-
 #include "BST/BST.h"
 #include "AvlTree/AvlTree.h"
-// #include "SplayTree/splayTree.h"
+#include "SplayTree/splayTree.h"
+#include "RBT/RedBlackTree.h"
 
 using namespace std;
 
@@ -94,6 +94,8 @@ vector<string> TestIncreasingInsertOrder(int N) {
     vector<string> ret;
     AvlTree avlTree;
     BST bst;
+    SplayTree splayTree;
+    RedBlackTree rbt;
     vector<int> insertItems;
     chrono::time_point<chrono::system_clock, chrono::nanoseconds>  begin_time, end_time;
     long long delta_time;
@@ -118,6 +120,22 @@ vector<string> TestIncreasingInsertOrder(int N) {
     delta_time = (end_time - begin_time).count();
     ret.push_back(to_string(N) + ";" + "AvlTree" + ";" + to_string(delta_time));
 
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : insertItems) {
+        splayTree.Insert(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "SplayTree" + ";" + to_string(delta_time));
+
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : insertItems) {
+        rbt.Insert(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "RedBlackTree" + ";" + to_string(delta_time));
+
     return ret;
 }
 
@@ -125,6 +143,8 @@ vector<string> TestRandomInsertOrder(int N) {
     vector<string> ret;
     AvlTree avlTree;
     BST bst;
+    SplayTree splayTree;
+    RedBlackTree rbt;
     vector<int> insertItems;
     chrono::time_point<chrono::system_clock, chrono::nanoseconds>  begin_time, end_time;
     long long delta_time;
@@ -153,6 +173,22 @@ vector<string> TestRandomInsertOrder(int N) {
     delta_time = (end_time - begin_time).count();
     ret.push_back(to_string(N) + ";" + "AvlTree" + ";" + to_string(delta_time));
 
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : insertItems) {
+        splayTree.Insert(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "SplayTree" + ";" + to_string(delta_time));
+
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : insertItems) {
+        rbt.Insert(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "RedBlackTree" + ";" + to_string(delta_time));
+
     return ret;
 }
 
@@ -160,6 +196,8 @@ vector<string> TestRandomDeleteOrder(int N) {
     vector<string> ret;
     AvlTree avlTree;
     BST bst;
+    SplayTree splayTree;
+    RedBlackTree rbt;
     vector<int> items;
     chrono::time_point<chrono::system_clock, chrono::nanoseconds>  begin_time, end_time;
     long long delta_time;
@@ -179,6 +217,14 @@ vector<string> TestRandomDeleteOrder(int N) {
 
     for (int item : items) {
         avlTree.Insert(item);
+    }
+
+    for (int item : items) {
+        splayTree.Insert(item);
+    }
+
+    for (int item : items) {
+        rbt.Insert(item);
     }
 
     // test random delete
@@ -202,6 +248,22 @@ vector<string> TestRandomDeleteOrder(int N) {
     delta_time = (end_time - begin_time).count();
     ret.push_back(to_string(N) + ";" + "AvlTree" + ";" + to_string(delta_time));
 
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : items) {
+        splayTree.Delete(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "SplayTree" + ";" + to_string(delta_time));
+
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : items) {
+        rbt.Delete(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "RedBlackTree" + ";" + to_string(delta_time));
+
     return ret;
 }
 
@@ -209,6 +271,8 @@ vector<string> TestRandomQuery(int N) {
     vector<string> ret;
     AvlTree avlTree;
     BST bst;
+    SplayTree splayTree;
+    RedBlackTree rbt;
     vector<int> items;
     chrono::time_point<chrono::system_clock, chrono::nanoseconds>  begin_time, end_time;
     long long delta_time;
@@ -228,6 +292,14 @@ vector<string> TestRandomQuery(int N) {
 
     for (int item : items) {
         avlTree.Insert(item);
+    }
+
+    for (int item : items) {
+        splayTree.Insert(item);
+    }
+
+    for (int item : items) {
+        rbt.Insert(item);
     }
 
     // test random query
@@ -251,6 +323,22 @@ vector<string> TestRandomQuery(int N) {
     delta_time = (end_time - begin_time).count();
     ret.push_back(to_string(N) + ";" + "AvlTree" + ";" + to_string(delta_time));
 
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : items) {
+        splayTree.Query(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "SplayTree" + ";" + to_string(delta_time));
+
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : items) {
+        rbt.Query(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "RedBlackTree" + ";" + to_string(delta_time));
+
     return ret;
 }
 
@@ -258,6 +346,8 @@ vector<string>TestSkewedQuery(int N) {
     vector<string> ret;
     AvlTree avlTree;
     BST bst;
+    SplayTree splayTree;
+    RedBlackTree rbt;
     vector<int> insertItems, queryItems;
     chrono::time_point<chrono::system_clock, chrono::nanoseconds> begin_time, end_time;
     long long delta_time;
@@ -277,6 +367,14 @@ vector<string>TestSkewedQuery(int N) {
 
     for (int item : insertItems) {
         avlTree.Insert(item);
+    }
+
+    for (int item : insertItems) {
+        splayTree.Insert(item);
+    }
+
+    for (int item : insertItems) {
+        rbt.Insert(item);
     }
 
     // test random skewed query
@@ -304,6 +402,22 @@ vector<string>TestSkewedQuery(int N) {
     end_time = std::chrono::high_resolution_clock::now();
     delta_time = (end_time - begin_time).count();
     ret.push_back(to_string(N) + ";" + "AvlTree" + ";" + to_string(delta_time));
+
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : queryItems) {
+        splayTree.Query(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "SplayTree" + ";" + to_string(delta_time));
+
+    begin_time = std::chrono::high_resolution_clock::now();
+    for (int item : queryItems) {
+        rbt.Query(item);
+    }
+    end_time = std::chrono::high_resolution_clock::now();
+    delta_time = (end_time - begin_time).count();
+    ret.push_back(to_string(N) + ";" + "RedBlackTree" + ";" + to_string(delta_time));
 
     return ret;
 }
