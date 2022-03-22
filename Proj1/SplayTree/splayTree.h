@@ -39,10 +39,16 @@ private:
 
     void splay(NodePtr x);
 
-public:
     NodePtr root;
+    bool is_splay_limit;
+    int current_splay_number;
+    int max_splay_number;
+
+public:
 
     SplayTree();
+
+    SplayTree(int N);
 
     NodePtr Query(int k);
 

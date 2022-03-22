@@ -15,10 +15,15 @@ class AvlTree {
         AvlTreeNode *left;
         AvlTreeNode *right;
     };
+
 private:
+    int unbalance_factor;
     AvlTreeNode *root;
+
 public:
     AvlTree();
+
+    AvlTree(int N);
 
     void Delete(int);
 

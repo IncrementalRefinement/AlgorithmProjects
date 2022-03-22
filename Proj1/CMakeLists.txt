@@ -34,3 +34,9 @@ add_executable(OverallTest
         AvlTree/AvlTree.cpp
         OverallTest.cpp
         )
+
+add_executable(SplayTreeTest
+        SplayTree/splayTree.h
+        SplayTree/splayTree.cpp
+        SplayTree/SplayTreeTest.cpp
+        )

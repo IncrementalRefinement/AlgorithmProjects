@@ -8,6 +8,8 @@
 
 #include "AvlTree.h"
 
+// static const int UNBALANCE_FACTOR = 100;
+
 AvlTree::AvlTreeNode::AvlTreeNode(int key) {
     this->key = key;
     this->left = nullptr;
@@ -18,6 +20,12 @@ AvlTree::AvlTreeNode::AvlTreeNode(int key) {
 
 AvlTree::AvlTree() {
     this->root = nullptr;
+    this->unbalance_factor = 1;
+}
+
+AvlTree::AvlTree(int N) {
+    this->root = nullptr;
+    this->unbalance_factor = N;
 }
 
 void AvlTree::Delete(int key) {
@@ -92,7 +100,7 @@ int AvlTree::FindMinValue(AvlTree::AvlTreeNode *node) {
 }
 
 AvlTree::AvlTreeNode *AvlTree::rotateIfNecessary(AvlTree::AvlTreeNode *node) {
-    if (isUnbalance(node)) {
+    while (isUnbalance(node)) {
         if (node->leftDepth > node->rightDepth) {
             if (node->left->leftDepth < node->left->rightDepth) {
                 node->left = leftRotate(node->left);
@@ -132,7 +140,7 @@ void AvlTree::checkRep() {
 
 void AvlTree::checkRep(AvlTree::AvlTreeNode *node) {
     if (node == nullptr) return;
-    assert(abs(node->leftDepth - node->rightDepth) <= 1);
+    assert(!isUnbalance(node));
     checkRep(node->left);
     checkRep(node->right);
 }
@@ -157,5 +165,5 @@ int AvlTree::getHeight(AvlTree::AvlTreeNode *node) {
 }
 
 bool AvlTree::isUnbalance(AvlTreeNode *node) {
-    return abs(node->leftDepth - node->rightDepth) > 1;
+    return abs(node->leftDepth - node->rightDepth) > unbalance_factor;
 }
