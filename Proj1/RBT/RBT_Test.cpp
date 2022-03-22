@@ -1,7 +1,7 @@
 #include <iostream>
 #include <cassert>
 
-#include "RBT.h"
+#include "RedBlackTree.h"
 
 void sanityTest() {
     RBT theTree = RBT_initTree();
