@@ -134,6 +134,8 @@ void SplayTree::splay(NodePtr x) {
 SplayTree::SplayTree() {
     root = nullptr;
     this->is_splay_limit = false;
+    this->current_splay_number = 0;
+    this->max_splay_number = 0;
 }
 
 SplayTree::SplayTree(int N) {

@@ -302,28 +302,28 @@ void RedBlackTree::Delete(int key) {
 }
 
 
-int main() {
-    RedBlackTree rbt;
-    rbt.Insert(55);
-    rbt.Insert(40);
-    rbt.Insert(65);
-    rbt.Insert(60);
-    rbt.Insert(75);
-    rbt.Insert(57);
-//    for (int i = 0; i < 1000; i++) {
-//        rbt.Insert(i);
-//    }
-//    for (int i = 0; i < 1000; i++) {
-//        rbt.Query(i);
-//    }
-//    for (int i = 0; i < 1000; i++) {
-//        rbt.Delete(i);
-//    }
-//    for (int i = 0; i < 1000; i++) {
-//        rbt.Query(i);
-//    }
-//    rbt.printTree();
-//    cout << endl
-//         << "After deleting" << endl;
-    rbt.Delete(40);
-};
+//int main() {
+//    RedBlackTree rbt;
+//    rbt.Insert(55);
+//    rbt.Insert(40);
+//    rbt.Insert(65);
+//    rbt.Insert(60);
+//    rbt.Insert(75);
+//    rbt.Insert(57);
+////    for (int i = 0; i < 1000; i++) {
+////        rbt.Insert(i);
+////    }
+////    for (int i = 0; i < 1000; i++) {
+////        rbt.Query(i);
+////    }
+////    for (int i = 0; i < 1000; i++) {
+////        rbt.Delete(i);
+////    }
+////    for (int i = 0; i < 1000; i++) {
+////        rbt.Query(i);
+////    }
+////    rbt.printTree();
+////    cout << endl
+////         << "After deleting" << endl;
+//    rbt.Delete(40);
+//};

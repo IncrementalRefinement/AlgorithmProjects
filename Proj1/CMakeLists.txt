@@ -20,6 +20,7 @@ add_executable(AvlTree_test
 add_executable(SplayTree_Test
         SplayTree/splayTree.h
         SplayTree/splayTree.cpp
+        SplayTree/SplayTreeTest.cpp
         )
 
 add_executable(OverallTest
@@ -27,6 +28,10 @@ add_executable(OverallTest
         BST/BST.cpp
         AvlTree/AvlTree.h
         AvlTree/AvlTree.cpp
+        SplayTree/splayTree.h
+        SplayTree/splayTree.cpp
+        RBT/RedBlackTree.h
+        RBT/RedBlackTree.cpp
         OverallTest.cpp
         )
 
