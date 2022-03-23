@@ -153,7 +153,7 @@ void RedBlackTree::insertFix(RBTnodePtr k) {
 }
 
 RedBlackTree::RedBlackTree() {
-    TNULL = new RedBlackTreeNode;
+    TNULL = new RBTnode();
     TNULL->color = 0;
     TNULL->left = nullptr;
     TNULL->right = nullptr;
@@ -202,7 +202,7 @@ void RedBlackTree::rightRotate(RBTnodePtr x) {
 }
 
 void RedBlackTree::Insert(int key) {
-    RBTnodePtr node = new RedBlackTreeNode;
+    RBTnodePtr node = new RBTnode();
     node->parent = nullptr;
     node->data = key;
     //Assign `Nil` to the left and right Child of newNode.
@@ -304,26 +304,26 @@ void RedBlackTree::Delete(int key) {
 
 int main() {
     RedBlackTree rbt;
-//    bst.Insert(55);
-//    bst.Insert(40);
-//    bst.Insert(65);
-//    bst.Insert(60);
-//    bst.Insert(75);
-//    bst.Insert(57);
-    for (int i = 0; i < 1000; i++) {
-        rbt.Insert(i);
-    }
-    for (int i = 0; i < 1000; i++) {
-        rbt.Query(i);
-    }
-    for (int i = 0; i < 1000; i++) {
-        rbt.Delete(i);
-    }
-    for (int i = 0; i < 1000; i++) {
-        rbt.Query(i);
-    }
+    rbt.Insert(55);
+    rbt.Insert(40);
+    rbt.Insert(65);
+    rbt.Insert(60);
+    rbt.Insert(75);
+    rbt.Insert(57);
+//    for (int i = 0; i < 1000; i++) {
+//        rbt.Insert(i);
+//    }
+//    for (int i = 0; i < 1000; i++) {
+//        rbt.Query(i);
+//    }
+//    for (int i = 0; i < 1000; i++) {
+//        rbt.Delete(i);
+//    }
+//    for (int i = 0; i < 1000; i++) {
+//        rbt.Query(i);
+//    }
 //    rbt.printTree();
 //    cout << endl
 //         << "After deleting" << endl;
-//    bst.Delete(40);
+    rbt.Delete(40);
 };
