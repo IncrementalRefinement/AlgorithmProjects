@@ -16,7 +16,11 @@ add_executable(AvlTree_test
         AvlTree/AvlTree.h
         AvlTree/AvlTreeTest.cpp
         )
-
+add_executable(RedBlackTreeTest
+        RBT/RedBlackTree.h
+        RBT/RedBlackTree.cpp
+        RBT/RedBlackTreeTest.cpp
+        )
 add_executable(SplayTree_Test
         SplayTree/splayTree.h
         SplayTree/splayTree.cpp
@@ -33,10 +37,4 @@ add_executable(OverallTest
         RBT/RedBlackTree.h
         RBT/RedBlackTree.cpp
         OverallTest.cpp
-        )
-
-add_executable(SplayTreeTest
-        SplayTree/splayTree.h
-        SplayTree/splayTree.cpp
-        SplayTree/SplayTreeTest.cpp
         )
