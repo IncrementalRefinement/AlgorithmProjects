@@ -27,32 +27,31 @@ RBTnodePtr RedBlackTree::minimum(RBTnodePtr node) {
 // For balancing the tree after deletion
 void RedBlackTree::deleteFix(RBTnodePtr x) {
     RBTnodePtr s;
-
     while (x != root && x->color == 0) {
         if (x == x->parent->left) {
             s = x->parent->right;
-            //the sibling of x  is red,
-            //Case-I:
             if (s->color == 1) {
+                // case 3.1
                 s->color = 0;
                 x->parent->color = 1;
                 leftRotate(x->parent);
                 s = x->parent->right;
             }
-            //If the sibling has two BLACK children.
-            //Case-II:
+
             if (s->left->color == 0 && s->right->color == 0) {
+                // case 3.2
                 s->color = 1;
                 x = x->parent;
             } else {
-                //Case-III:
                 if (s->right->color == 0) {
+                    // case 3.3
                     s->left->color = 0;
                     s->color = 1;
                     rightRotate(s);
                     s = x->parent->right;
                 }
-                // case IV
+
+                // case 3.4
                 s->color = x->parent->color;
                 x->parent->color = 0;
                 s->right->color = 0;
@@ -60,9 +59,9 @@ void RedBlackTree::deleteFix(RBTnodePtr x) {
                 x = root;
             }
         } else {
-            //Else the same as above with right changed to left and vice versa.
             s = x->parent->left;
             if (s->color == 1) {
+                // case 3.1
                 s->color = 0;
                 x->parent->color = 1;
                 rightRotate(x->parent);
@@ -70,16 +69,19 @@ void RedBlackTree::deleteFix(RBTnodePtr x) {
             }
 
             if (s->right->color == 0) {
+                // case 3.2
                 s->color = 1;
                 x = x->parent;
             } else {
                 if (s->left->color == 0) {
+                    // case 3.3
                     s->right->color = 0;
                     s->color = 1;
                     leftRotate(s);
                     s = x->parent->left;
                 }
 
+                // case 3.4
                 s->color = x->parent->color;
                 x->parent->color = 0;
                 s->left->color = 0;
