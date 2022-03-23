@@ -9,46 +9,46 @@
 #include <iostream>
 
 using namespace std;
-struct Node {
+struct RBTnode {
     int data;
-    Node *parent;
-    Node *left;
-    Node *right;
+    RBTnode *parent;
+    RBTnode *left;
+    RBTnode *right;
     int color;
 };
 
-typedef Node *NodePtr;
+typedef RBTnode *RBTnodePtr;
 
 class RedBlackTree {
 private:
-    NodePtr root;
-    NodePtr TNULL;
+    RBTnodePtr root;
+    RBTnodePtr TNULL;
 
-    NodePtr searchTreeHelper(NodePtr node, int key);
+    RBTnodePtr searchTreeHelper(RBTnodePtr node, int key);
 
     // For balancing the tree after deletion
-    void deleteFix(NodePtr x);
+    void deleteFix(RBTnodePtr x);
 
-    void rbTransplant(NodePtr u, NodePtr v);
+    void rbTransplant(RBTnodePtr u, RBTnodePtr v);
 
     // For balancing the tree after insertion
-    void insertFix(NodePtr k);
+    void insertFix(RBTnodePtr k);
 
 public:
     RedBlackTree();
 
-    NodePtr Query(int k);
+    RBTnodePtr Query(int k);
 
-    void leftRotate(NodePtr x);
+    void leftRotate(RBTnodePtr x);
 
-    void rightRotate(NodePtr x);
+    void rightRotate(RBTnodePtr x);
 
     // Inserting a node
     void Insert(int key);
 
     void Delete(int data);
 
-    NodePtr minimum(NodePtr node);
+    RBTnodePtr minimum(RBTnodePtr node);
 };
 
 #endif //REDBLACKTREE_REDBLACKTREE_H

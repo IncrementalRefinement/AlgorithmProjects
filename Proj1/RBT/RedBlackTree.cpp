@@ -6,18 +6,18 @@
 
 // Implementing Red-Black Tree in C++
 
-NodePtr RedBlackTree::searchTreeHelper(NodePtr node, int key) {
+RBTnodePtr RedBlackTree::searchTreeHelper(RBTnodePtr node, int key) {
     if (node == TNULL || key == node->data) {
         return node;
     }
 
     if (key < node->data) {
         return searchTreeHelper(node->left, key);
-    }
-    return searchTreeHelper(node->right, key);
+    } else
+        return searchTreeHelper(node->right, key);
 }
 
-NodePtr RedBlackTree::minimum(NodePtr node) {
+RBTnodePtr RedBlackTree::minimum(RBTnodePtr node) {
     while (node->left != TNULL) {
         node = node->left;
     }
@@ -25,29 +25,34 @@ NodePtr RedBlackTree::minimum(NodePtr node) {
 }
 
 // For balancing the tree after deletion
-void RedBlackTree::deleteFix(NodePtr x) {
-    NodePtr s;
+void RedBlackTree::deleteFix(RBTnodePtr x) {
+    RBTnodePtr s;
+
     while (x != root && x->color == 0) {
         if (x == x->parent->left) {
             s = x->parent->right;
+            //the sibling of x  is red,
+            //Case-I:
             if (s->color == 1) {
                 s->color = 0;
                 x->parent->color = 1;
                 leftRotate(x->parent);
                 s = x->parent->right;
             }
-
+            //If the sibling has two BLACK children.
+            //Case-II:
             if (s->left->color == 0 && s->right->color == 0) {
                 s->color = 1;
                 x = x->parent;
             } else {
+                //Case-III:
                 if (s->right->color == 0) {
                     s->left->color = 0;
                     s->color = 1;
                     rightRotate(s);
                     s = x->parent->right;
                 }
-
+                // case IV
                 s->color = x->parent->color;
                 x->parent->color = 0;
                 s->right->color = 0;
@@ -55,6 +60,7 @@ void RedBlackTree::deleteFix(NodePtr x) {
                 x = root;
             }
         } else {
+            //Else the same as above with right changed to left and vice versa.
             s = x->parent->left;
             if (s->color == 1) {
                 s->color = 0;
@@ -85,7 +91,7 @@ void RedBlackTree::deleteFix(NodePtr x) {
     x->color = 0;
 }
 
-void RedBlackTree::rbTransplant(NodePtr u, NodePtr v) {
+void RedBlackTree::rbTransplant(RBTnodePtr u, RBTnodePtr v) {
     if (u->parent == nullptr) {
         root = v;
     } else if (u == u->parent->left) {
@@ -96,21 +102,25 @@ void RedBlackTree::rbTransplant(NodePtr u, NodePtr v) {
     v->parent = u->parent;
 }
 
-void RedBlackTree::insertFix(NodePtr k) {
-    NodePtr u;
+void RedBlackTree::insertFix(RBTnodePtr k) {
+    RBTnodePtr u;
+    //Do the following while the parent of newNode p is RED.
     while (k->parent->color == 1) {
         if (k->parent == k->parent->parent->right) {
             u = k->parent->parent->left;
+            //If the sibling is RED,
+            // set the color of both the children of gP as BLACK and the color of gP as RED.
             if (u->color == 1) {
                 u->color = 0;
                 k->parent->color = 0;
                 k->parent->parent->color = 1;
-                k = k->parent->parent;
+                k = k->parent->parent;//Assign gP to newNode.
             } else {
                 if (k == k->parent->left) {
                     k = k->parent;
                     rightRotate(k);
                 }
+                //Set color of p as BLACK and color of gP as RED.
                 k->parent->color = 0;
                 k->parent->parent->color = 1;
                 leftRotate(k->parent->parent);
@@ -119,15 +129,17 @@ void RedBlackTree::insertFix(NodePtr k) {
             u = k->parent->parent->right;
 
             if (u->color == 1) {
+                //set the color of both the children of gP as BLACK and the color of gP as RED.
                 u->color = 0;
                 k->parent->color = 0;
                 k->parent->parent->color = 1;
-                k = k->parent->parent;
+                k = k->parent->parent;//Assign gP to newNode
             } else {
                 if (k == k->parent->right) {
                     k = k->parent;
                     leftRotate(k);
                 }
+                //Set color of p as BLACK and color of gP as RED.
                 k->parent->color = 0;
                 k->parent->parent->color = 1;
                 rightRotate(k->parent->parent);
@@ -137,25 +149,24 @@ void RedBlackTree::insertFix(NodePtr k) {
             break;
         }
     }
-    root->color = 0;
+    root->color = 0;//Set the root of the tree as BLACK.
 }
 
 RedBlackTree::RedBlackTree() {
-
-    TNULL = new Node;
+    TNULL = new RedBlackTreeNode;
     TNULL->color = 0;
     TNULL->left = nullptr;
     TNULL->right = nullptr;
     root = TNULL;
 }
 
-NodePtr RedBlackTree::Query(int k) {
+RBTnodePtr RedBlackTree::Query(int k) {
     return searchTreeHelper(this->root, k);
 }
 
 
-void RedBlackTree::leftRotate(NodePtr x) {
-    NodePtr y = x->right;
+void RedBlackTree::leftRotate(RBTnodePtr x) {
+    RBTnodePtr y = x->right;
     x->right = y->left;
     if (y->left != TNULL) {
         y->left->parent = x;
@@ -172,8 +183,8 @@ void RedBlackTree::leftRotate(NodePtr x) {
     x->parent = y;
 }
 
-void RedBlackTree::rightRotate(NodePtr x) {
-    NodePtr y = x->left;
+void RedBlackTree::rightRotate(RBTnodePtr x) {
+    RBTnodePtr y = x->left;
     x->left = y->right;
     if (y->right != TNULL) {
         y->right->parent = x;
@@ -191,7 +202,7 @@ void RedBlackTree::rightRotate(NodePtr x) {
 }
 
 void RedBlackTree::Insert(int key) {
-    NodePtr node = new Node;
+    RBTnodePtr node = new RedBlackTreeNode;
     node->parent = nullptr;
     node->data = key;
     //Assign `Nil` to the left and right Child of newNode.
@@ -199,8 +210,8 @@ void RedBlackTree::Insert(int key) {
     node->right = TNULL;
     node->color = 1;//Assign RED color to newNode.
 
-    NodePtr y = nullptr;// y is the parent of x
-    NodePtr x = this->root;
+    RBTnodePtr y = nullptr;// y is the parent of x
+    RBTnodePtr x = this->root;
 
     while (x != TNULL) {
         y = x;
@@ -215,7 +226,7 @@ void RedBlackTree::Insert(int key) {
     //find the leaf node as search in a binary search tree.
     if (y == nullptr) {
         root = node;//Check if the tree is empty (ie. whether x is `NIL`).
-        // If yes, insert new Node as a root node and color it black.
+        // If yes, insert new RedBlackTreeNode as a root node and color it black.
     } else if (node->data < y->data) {
         y->left = node;
     } else {
@@ -236,9 +247,9 @@ void RedBlackTree::Insert(int key) {
 
 
 void RedBlackTree::Delete(int key) {
-    NodePtr node = root;
-    NodePtr z = TNULL;
-    NodePtr x, y;
+    RBTnodePtr node = root;
+    RBTnodePtr z = TNULL;
+    RBTnodePtr x, y;
     while (node != TNULL) {
         if (node->data == key) {
             z = node;
@@ -257,6 +268,7 @@ void RedBlackTree::Delete(int key) {
     }
 
     y = z;
+    //Save the color of nodeToBeDeleted in origrinalColor.
     int y_original_color = y->color;
     if (z->left == TNULL) {
         x = z->right;
@@ -277,11 +289,13 @@ void RedBlackTree::Delete(int key) {
         }
 
         rbTransplant(z, y);
+        //Set the color of y with originalColor.
         y->left = z->left;
         y->left->parent = y;
         y->color = z->color;
     }
     delete z;
+    //If the originalColor is BLACK, invoke DeleteFix(x).
     if (y_original_color == 0) {
         deleteFix(x);
     }
