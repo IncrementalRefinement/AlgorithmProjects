@@ -42,6 +42,7 @@ vector<string> TestSkewedQuery(int N);
 // TODO: the code is really verbose and repeated, need refactor
 
 void TestIncreasingInsertOrder(ofstream &outputFile) {
+    cout << "TestIncreasingInsertOrder begin" << endl;
     static string TestCase = "TestIncreasingInsertOrder";
     for (int i = MIN_N; i <= MAX_N; i += STEP_SIZE) {
         vector<string> results = TestIncreasingInsertOrder(i);
@@ -49,9 +50,11 @@ void TestIncreasingInsertOrder(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
+    cout << "TestIncreasingInsertOrder finish" << endl;
 }
 
 void TestRandomInsertOrder(ofstream &outputFile) {
+    cout << "TestRandomInsertOrder begin" << endl;
     static string TestCase = "TestRandomInsertOrder";
     for (int i = MIN_N; i <= MAX_N; i += STEP_SIZE) {
         vector<string> results = TestRandomInsertOrder(i);
@@ -59,9 +62,11 @@ void TestRandomInsertOrder(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
+    cout << "TestRandomInsertOrder finish" << endl;
 }
 
 void TestRandomDeleteOrder(ofstream &outputFile) {
+    cout << "TestRandomDeleteOrder begin" << endl;
     static string TestCase = "TestRandomDeleteOrder";
     for (int i = MIN_N; i <= MAX_N; i += STEP_SIZE) {
         vector<string> results = TestRandomDeleteOrder(i);
@@ -69,9 +74,11 @@ void TestRandomDeleteOrder(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
+    cout << "TestRandomDeleteOrder finish" << endl;
 }
 
 void TestRandomQuery(ofstream &outputFile) {
+    cout << "TestRandomQuery begin" << endl;
     static string TestCase = "TestRandomQuery";
     for (int i = MIN_N; i <= MAX_N; i += STEP_SIZE) {
         vector<string> results = TestRandomQuery(i);
@@ -79,9 +86,11 @@ void TestRandomQuery(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
+    cout << "TestRandomQuery begin" << endl;
 }
 
 void TestSkewedQuery(ofstream &outputFile) {
+    cout << "TestSkewedQuery begin" << endl;
     static string TestCase = "TestSkewedQuery";
     for (int i = MIN_N; i <= MAX_N; i += STEP_SIZE) {
         vector<string> results = TestSkewedQuery(i);
@@ -89,6 +98,7 @@ void TestSkewedQuery(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
+    cout << "TestSkewedQuery begin" << endl;
 }
 
 vector<string> TestIncreasingInsertOrder(int N) {
