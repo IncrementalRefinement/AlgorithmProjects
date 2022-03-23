@@ -17,11 +17,6 @@ add_executable(AvlTree_test
         AvlTree/AvlTreeTest.cpp
         )
 
-add_executable(RBT_Test
-        RBT/RedBlackTree.h
-        RBT/RBT_Test.cpp
-        )
-
 add_executable(SplayTree_Test
         SplayTree/splayTree.h
         SplayTree/splayTree.cpp
