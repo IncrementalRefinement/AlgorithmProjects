@@ -181,6 +181,11 @@ void SplayTree::Insert(int key) {
 }
 
 void SplayTree::Delete(int key) {
+    if (is_splay_limit && (this->current_splay_number >= this->max_splay_number)) {
+        root = Delete(root, key);
+        return;
+    }
+
     NodePtr x = nullptr;
     NodePtr t = nullptr;
     NodePtr s = nullptr;
@@ -198,17 +203,19 @@ void SplayTree::Delete(int key) {
         }
     }
     if (x == nullptr) {
-        cout << "Couldn't find key in the tree" << endl;
         return;
     }
     // split to s, t two subTree
-    split(x, s, t);
-    if (s->left != nullptr) {
-        s->left->parent = nullptr;// remove x
+    {
+        split(x, s, t);
+        if (s->left != nullptr) {
+            s->left->parent = nullptr;// remove x
+        }
+        this->root = join(s->left, t);
+        delete (s);
+        s = nullptr;
+        this->current_splay_number += 2;
     }
-    this->root = join(s->left, t);
-    delete (s);
-    s = nullptr;
 }
 
 void SplayTree::print(NodePtr root) {
@@ -216,6 +223,42 @@ void SplayTree::print(NodePtr root) {
     return;
 }
 
+
+NodePtr SplayTree::Delete(NodePtr node, int key) {
+    if (node == nullptr) return nullptr;
+    if (node->data == key) {
+        if (node->left == nullptr && node->right == nullptr) {
+            delete node;
+            return nullptr;
+        } else if (node->left != nullptr && node->right != nullptr) {
+            int newKey = FindMinValue(node->right);
+            node->data = newKey;
+            node->right = Delete(node->right, newKey);
+            return node;
+        } else if (node->left != nullptr) {
+            NodePtr ret = node->left;
+            delete node;
+            return ret;
+        } else {
+            NodePtr ret = node->right;
+            delete node;
+            return ret;
+        }
+    } else if (node->data < key) {
+        node->right = Delete(node->right, key);
+    } else {
+        node->left = Delete(node->left, key);
+    }
+    return node;
+}
+
+int SplayTree::FindMinValue(NodePtr node) {
+    NodePtr ptr = node;
+    while (ptr->left != nullptr) {
+        ptr = ptr->left;
+    }
+    return ptr->data;
+}
 
 //int main() {
 //    SplayTree bst;

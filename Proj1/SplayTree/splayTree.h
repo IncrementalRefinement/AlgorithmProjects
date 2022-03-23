@@ -39,6 +39,10 @@ private:
 
     void splay(NodePtr x);
 
+    NodePtr Delete(NodePtr node, int key);
+
+    int FindMinValue(NodePtr node);
+
     NodePtr root;
     bool is_splay_limit;
     int current_splay_number;

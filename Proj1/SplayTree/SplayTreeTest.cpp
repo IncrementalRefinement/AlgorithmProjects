@@ -63,7 +63,7 @@ void DeleteTest() {
 }
 
 void RandomInsertDeleteTest() {
-    auto *theTree = new SplayTree();
+    auto *theTree = new SplayTree(100);
     std::vector<int> checkArray;
     checkArray.resize(10000);
     for (int i = 0; i < 10000; i++) {
