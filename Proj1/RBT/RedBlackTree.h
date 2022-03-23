@@ -1,54 +1,43 @@
 //
-// Created by 12638 on 2022/3/20.
+// Created by Xander on 2022/3/23.
 //
 
-#ifndef REDBLACKTREE_REDBLACKTREE_H
-#define REDBLACKTREE_REDBLACKTREE_H
-// Implementing Red-Black Tree in C++
-#include <string>
-#include <iostream>
-
-using namespace std;
-struct RBTnode {
-    int data;
-    RBTnode *parent;
-    RBTnode *left;
-    RBTnode *right;
-    int color;
-};
-
-typedef RBTnode *RBTnodePtr;
+#ifndef PROJ1_REDBLACKTREE_H
+#define PROJ1_REDBLACKTREE_H
 
 class RedBlackTree {
-private:
-    RBTnodePtr root;
-    RBTnodePtr TNULL;
-
-    RBTnodePtr searchTreeHelper(RBTnodePtr node, int key);
-
-    // For balancing the tree after deletion
-    void deleteFix(RBTnodePtr x);
-
-    void rbTransplant(RBTnodePtr u, RBTnodePtr v);
-
-    // For balancing the tree after insertion
-    void insertFix(RBTnodePtr k);
+    class Node {
+    public:
+        Node(int);
+        int key;
+        Node *leftChild, *rightChild, *parent;
+        int type;
+        Node *getSibling();
+    };
 
 public:
     RedBlackTree();
 
-    RBTnodePtr Query(int k);
+    void Insert(int);
 
-    void leftRotate(RBTnodePtr x);
+    bool Query(int);
 
-    void rightRotate(RBTnodePtr x);
+    void Delete(int);
 
-    // Inserting a node
-    void Insert(int key);
+    void checkRep();
 
-    void Delete(int data);
+private:
+    Node *root;
 
-    RBTnodePtr minimum(RBTnodePtr node);
+    Node *findNode(int);
+
+    Node *leftRotate(Node *node);
+
+    Node *rightRotate(Node *node);
+
+    void handleDoubleRed(Node *node);
+
+    void handleDoubleBlack(Node *node);
 };
 
-#endif //REDBLACKTREE_REDBLACKTREE_H
+#endif //PROJ1_REDBLACKTREE_H
