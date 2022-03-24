@@ -31,6 +31,10 @@ private:
 
     Node *findNode(int);
 
+    void Delete(int, Node*);
+
+    void DeleteLeafNode(Node*);
+
     Node *leftRotate(Node *node);
 
     Node *rightRotate(Node *node);
@@ -38,6 +42,8 @@ private:
     void handleDoubleRed(Node *node);
 
     void handleDoubleBlack(Node *node);
+
+    Node *findMin(Node *node);
 };
 
 #endif //PROJ1_REDBLACKTREE_H

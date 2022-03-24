@@ -70,16 +70,16 @@ void RandomInsertDeleteTest() {
     std::shuffle(checkArray.begin(), checkArray.end(), std::default_random_engine(seed));
 
     for (int i = 0; i < 10000; i++) {
-        theTree->Insert(i);
-        assert(theTree->Query(i));
+        theTree->Insert(checkArray[i]);
+        assert(theTree->Query(checkArray[i]));
         theTree->checkRep();
     }
 
     seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::shuffle(checkArray.begin(), checkArray.end(), std::default_random_engine(seed));
     for (int i = 0; i < 10000; i++) {
-        theTree->Delete(i);
-        assert(!theTree->Query(i));
+        theTree->Delete(checkArray[i]);
+        assert(!theTree->Query(checkArray[i]));
         theTree->checkRep();
     }
 
