@@ -24,7 +24,8 @@ const int MIN_N = 1;
 const int MAX_N = MIN_N + STEP_NUM * STEP_SIZE;
 const double SKEWED_QUERY_PROPORTION = 0.1;
 const int AVLTREE_PLUS_UNBALANCE_FACTOR = 5;
-const char *const OUTPUT_FILE_LOCATION = "result.csv";
+const char *const TEST_RESULT_FILE_LOCATION = "result.csv";
+const char *const TEST_CASE_FILE_LOCATION_POSTFIX = "_DATA.csv";
 
 
 void TestIncreasingInsertOrder(ofstream &outputFile);
@@ -38,6 +39,8 @@ vector<string> TestRandomInsertOrder(int N);
 vector<string> TestRandomDeleteOrder(int N);
 vector<string> TestRandomQuery(int N);
 vector<string> TestSkewedQuery(int N);
+
+void writeTestCase(string testcase, string operation, const vector<int>& dataItems);
 
 // TODO: the code is really verbose and repeated, need refactor
 
@@ -118,6 +121,8 @@ vector<string> TestIncreasingInsertOrder(int N) {
         insertItems[i] = i;
     }
 
+    writeTestCase("TestIncreasingInsertOrder", "Insert", insertItems);
+
     begin_time = std::chrono::high_resolution_clock::now();
     for (int item : insertItems) {
         bst.Insert(item);
@@ -189,6 +194,7 @@ vector<string> TestRandomInsertOrder(int N) {
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(insertItems.begin(), insertItems.end(), default_random_engine(seed));
+    writeTestCase("TestRandomInsertOrder", "Insert", insertItems);
 
     begin_time = std::chrono::high_resolution_clock::now();
     for (int item : insertItems) {
@@ -261,6 +267,7 @@ vector<string> TestRandomDeleteOrder(int N) {
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(items.begin(), items.end(), default_random_engine(seed));
+    writeTestCase("TestRandomDeleteOrder", "Insert", items);
 
     // construct trees by random insert
     for (int item : items) {
@@ -291,6 +298,8 @@ vector<string> TestRandomDeleteOrder(int N) {
     seed = std::chrono::system_clock::now().time_since_epoch().count();
 
     shuffle(items.begin(), items.end(), default_random_engine(seed));
+
+    writeTestCase("TestRandomDeleteOrder", "Delete", items);
 
     begin_time = std::chrono::high_resolution_clock::now();
     for (int item : items) {
@@ -363,6 +372,7 @@ vector<string> TestRandomQuery(int N) {
 
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(items.begin(), items.end(), default_random_engine(seed));
+    writeTestCase("TestRandomQuery", "Insert", items);
 
     // construct trees by random insert
     for (int item : items) {
@@ -393,6 +403,8 @@ vector<string> TestRandomQuery(int N) {
     seed = std::chrono::system_clock::now().time_since_epoch().count();
 
     shuffle(items.begin(), items.end(), default_random_engine(seed));
+
+    writeTestCase("TestRandomQuery", "Query", items);
 
     begin_time = std::chrono::high_resolution_clock::now();
     for (int item : items) {
@@ -466,6 +478,9 @@ vector<string>TestSkewedQuery(int N) {
     unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     shuffle(insertItems.begin(), insertItems.end(), default_random_engine(seed));
 
+    writeTestCase("TestSkewedQuery", "Insert", insertItems);
+
+
     // construct trees by random insert
     for (int item : insertItems) {
         bst.Insert(item);
@@ -500,6 +515,8 @@ vector<string>TestSkewedQuery(int N) {
         }
     }
     shuffle(queryItems.begin(), queryItems.end(), default_random_engine(seed));
+
+    writeTestCase("TestSkewedQuery", "Query", queryItems);
 
     begin_time = std::chrono::high_resolution_clock::now();
     for (int item : queryItems) {
@@ -558,12 +575,29 @@ vector<string>TestSkewedQuery(int N) {
  */
 int main() {
     ofstream resultFile;
-    remove(OUTPUT_FILE_LOCATION);
-    resultFile.open(OUTPUT_FILE_LOCATION, fstream::in | fstream::out | fstream::app);
+    remove(TEST_RESULT_FILE_LOCATION);
+    resultFile.open(TEST_RESULT_FILE_LOCATION, fstream::in | fstream::out | fstream::app);
     TestIncreasingInsertOrder(resultFile);
     TestRandomInsertOrder(resultFile);
     TestRandomDeleteOrder(resultFile);
     TestRandomQuery(resultFile);
     TestSkewedQuery(resultFile);
     resultFile.close();
+}
+
+
+/*
+ * TestCase; Operation; DataIndex; Data
+ */
+void writeTestCase(string testcase, string operation, const vector<int>& dataItems) {
+    int dataID = 0;
+    ofstream outputFile;
+    string fileName = testcase + TEST_CASE_FILE_LOCATION_POSTFIX;
+    remove(fileName.c_str());
+    outputFile.open(fileName, fstream::in | fstream::out | fstream::app);
+    for (int data : dataItems) {
+        outputFile << testcase << ";" << operation << ";" << dataID << ";" << data << endl;
+        dataID++;
+    }
+    outputFile.close();
 }
