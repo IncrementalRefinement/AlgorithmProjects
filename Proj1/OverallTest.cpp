@@ -591,12 +591,16 @@ int main() {
  */
 void writeTestCase(string testcase, string operation, const vector<int>& dataItems) {
     int dataID = 0;
+    int N = dataItems.size();
     ofstream outputFile;
     string fileName = testcase + TEST_CASE_FILE_LOCATION_POSTFIX;
-    remove(fileName.c_str());
+    if (dataItems.size() == 1) {
+        remove(fileName.c_str());
+    }
     outputFile.open(fileName, fstream::in | fstream::out | fstream::app);
     for (int data : dataItems) {
-        outputFile << testcase << ";" << operation << ";" << dataID << ";" << data << endl;
+        string dataStringID = to_string(dataID) + "/" + to_string(N);
+        outputFile << testcase << ";" << operation << ";" << dataStringID << ";" << data << endl;
         dataID++;
     }
     outputFile.close();
