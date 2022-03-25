@@ -89,7 +89,7 @@ void TestRandomQuery(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
-    cout << "TestRandomQuery begin" << endl;
+    cout << "TestRandomQuery finish" << endl;
 }
 
 void TestSkewedQuery(ofstream &outputFile) {
@@ -101,7 +101,7 @@ void TestSkewedQuery(ofstream &outputFile) {
             outputFile << TestCase << ";" << item << endl;
         }
     }
-    cout << "TestSkewedQuery begin" << endl;
+    cout << "TestSkewedQuery finish" << endl;
 }
 
 vector<string> TestIncreasingInsertOrder(int N) {

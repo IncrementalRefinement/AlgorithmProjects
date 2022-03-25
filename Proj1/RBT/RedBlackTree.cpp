@@ -1,331 +1,441 @@
 //
-// Created by 12638 on 2022/3/20.
+// Created by Xander on 2022/3/23.
 //
-#include <assert.h>
+
+#include <cassert>
+
 #include "RedBlackTree.h"
 
-// Implementing Red-Black Tree in C++
-
-RBTnodePtr RedBlackTree::searchTreeHelper(RBTnodePtr node, int key) {
-    if (node == TNULL || key == node->data) {
-        return node;
-    }
-
-    if (key < node->data) {
-        return searchTreeHelper(node->left, key);
-    } else
-        return searchTreeHelper(node->right, key);
-}
-
-RBTnodePtr RedBlackTree::minimum(RBTnodePtr node) {
-    while (node->left != TNULL) {
-        node = node->left;
-    }
-    return node;
-}
-
-// For balancing the tree after deletion
-void RedBlackTree::deleteFix(RBTnodePtr x) {
-    RBTnodePtr s;
-    while (x != root && x->color == 0) {
-        if (x == x->parent->left) {
-            s = x->parent->right;
-            if (s->color == 1) {
-                // case 3.1
-                s->color = 0;
-                x->parent->color = 1;
-                leftRotate(x->parent);
-                s = x->parent->right;
-            }
-
-            if (s->left->color == 0 && s->right->color == 0) {
-                // case 3.2
-                s->color = 1;
-                x = x->parent;
-            } else {
-                if (s->right->color == 0) {
-                    // case 3.3
-                    s->left->color = 0;
-                    s->color = 1;
-                    rightRotate(s);
-                    s = x->parent->right;
-                }
-
-                // case 3.4
-                s->color = x->parent->color;
-                x->parent->color = 0;
-                s->right->color = 0;
-                leftRotate(x->parent);
-                x = root;
-            }
-        } else {
-            s = x->parent->left;
-            if (s->color == 1) {
-                // case 3.1
-                s->color = 0;
-                x->parent->color = 1;
-                rightRotate(x->parent);
-                s = x->parent->left;
-            }
-
-            if (s->right->color == 0) {
-                // case 3.2
-                s->color = 1;
-                x = x->parent;
-            } else {
-                if (s->left->color == 0) {
-                    // case 3.3
-                    s->right->color = 0;
-                    s->color = 1;
-                    leftRotate(s);
-                    s = x->parent->left;
-                }
-
-                // case 3.4
-                s->color = x->parent->color;
-                x->parent->color = 0;
-                s->left->color = 0;
-                rightRotate(x->parent);
-                x = root;
-            }
-        }
-    }
-    x->color = 0;
-}
-
-void RedBlackTree::rbTransplant(RBTnodePtr u, RBTnodePtr v) {
-    if (u->parent == nullptr) {
-        root = v;
-    } else if (u == u->parent->left) {
-        u->parent->left = v;
-    } else {
-        u->parent->right = v;
-    }
-    v->parent = u->parent;
-}
-
-void RedBlackTree::insertFix(RBTnodePtr k) {
-    RBTnodePtr u;
-    //Do the following while the parent of newNode p is RED.
-    while (k->parent->color == 1) {
-        if (k->parent == k->parent->parent->right) {
-            u = k->parent->parent->left;
-            //If the sibling is RED,
-            // set the color of both the children of gP as BLACK and the color of gP as RED.
-            if (u->color == 1) {
-                u->color = 0;
-                k->parent->color = 0;
-                k->parent->parent->color = 1;
-                k = k->parent->parent;//Assign gP to newNode.
-            } else {
-                if (k == k->parent->left) {
-                    k = k->parent;
-                    rightRotate(k);
-                }
-                //Set color of p as BLACK and color of gP as RED.
-                k->parent->color = 0;
-                k->parent->parent->color = 1;
-                leftRotate(k->parent->parent);
-            }
-        } else {
-            u = k->parent->parent->right;
-
-            if (u->color == 1) {
-                //set the color of both the children of gP as BLACK and the color of gP as RED.
-                u->color = 0;
-                k->parent->color = 0;
-                k->parent->parent->color = 1;
-                k = k->parent->parent;//Assign gP to newNode
-            } else {
-                if (k == k->parent->right) {
-                    k = k->parent;
-                    leftRotate(k);
-                }
-                //Set color of p as BLACK and color of gP as RED.
-                k->parent->color = 0;
-                k->parent->parent->color = 1;
-                rightRotate(k->parent->parent);
-            }
-        }
-        if (k == root) {
-            break;
-        }
-    }
-    root->color = 0;//Set the root of the tree as BLACK.
-}
+const int TYPE_RED = 0;
+const int TYPE_BLACK = 1;
+const int TYPE_DOUBLE_BLACK = 2;
 
 RedBlackTree::RedBlackTree() {
-    TNULL = new RBTnode();
-    TNULL->color = 0;
-    TNULL->left = nullptr;
-    TNULL->right = nullptr;
-    root = TNULL;
+    root = nullptr;
 }
 
-RBTnodePtr RedBlackTree::Query(int k) {
-    return searchTreeHelper(this->root, k);
-}
-
-
-void RedBlackTree::leftRotate(RBTnodePtr x) {
-    RBTnodePtr y = x->right;
-    x->right = y->left;
-    if (y->left != TNULL) {
-        y->left->parent = x;
+int RedBlackTree::checkRep(RedBlackTree::Node *node) {
+    if (node == nullptr) {
+        return 1;
     }
-    y->parent = x->parent;
-    if (x->parent == nullptr) {
-        this->root = y;
-    } else if (x == x->parent->left) {
-        x->parent->left = y;
+
+    assert(node->type == TYPE_BLACK || node->type == TYPE_RED);
+    int leftDepth = checkRep(node->leftChild);
+    int rightDepth = checkRep(node->rightChild);
+
+    assert(leftDepth == rightDepth);
+
+    if (node->type == TYPE_RED) {
+        assert(node->leftChild == nullptr || node->leftChild->type != TYPE_RED);
+        assert(node->rightChild == nullptr || node->rightChild->type != TYPE_RED);
+    }
+
+    if (node->type == TYPE_BLACK) {
+        return leftDepth + 1;
     } else {
-        x->parent->right = y;
+        return leftDepth;
     }
-    y->left = x;
-    x->parent = y;
 }
 
-void RedBlackTree::rightRotate(RBTnodePtr x) {
-    RBTnodePtr y = x->left;
-    x->left = y->right;
-    if (y->right != TNULL) {
-        y->right->parent = x;
-    }
-    y->parent = x->parent;
-    if (x->parent == nullptr) {
-        this->root = y;
-    } else if (x == x->parent->right) {
-        x->parent->right = y;
-    } else {
-        x->parent->left = y;
-    }
-    y->right = x;
-    x->parent = y;
+void RedBlackTree::checkRep() {
+    assert(root == nullptr || root->type == TYPE_BLACK);
+    checkRep(root);
 }
 
 void RedBlackTree::Insert(int key) {
-    RBTnodePtr node = new RBTnode();
-    node->parent = nullptr;
-    node->data = key;
-    //Assign `Nil` to the left and right Child of newNode.
-    node->left = TNULL;
-    node->right = TNULL;
-    node->color = 1;//Assign RED color to newNode.
-
-    RBTnodePtr y = nullptr;// y is the parent of x
-    RBTnodePtr x = this->root;
-
-    while (x != TNULL) {
-        y = x;
-        if (node->data < x->data) {
-            x = x->left;
+    // 1. find the place to insert
+    Node *prev = nullptr;
+    Node *ptr = root;
+    while (ptr != nullptr) {
+        prev = ptr;
+        if (key > ptr->key) {
+            ptr = ptr -> rightChild;
         } else {
-            x = x->right;
+            ptr = ptr->leftChild;
         }
     }
-
-    node->parent = y;
-    //find the leaf node as search in a binary search tree.
-    if (y == nullptr) {
-        root = node;//Check if the tree is empty (ie. whether x is `NIL`).
-        // If yes, insert new RedBlackTreeNode as a root node and color it black.
-    } else if (node->data < y->data) {
-        y->left = node;
+    // 2. insert
+    if (prev == nullptr) {
+        // the tree is empty
+        root = new Node(key);
+        root->type = TYPE_BLACK;
     } else {
-        y->right = node;
+        Node *newNode = new Node(key);
+        newNode->parent = prev;
+        if (key > prev->key) {
+            prev->rightChild = newNode;
+        } else {
+            prev->leftChild = newNode;
+        }
     }
-
-    if (node->parent == nullptr) {
-        node->color = 0;
-        return;
+    // 3. handle double red
+    if (prev != nullptr && prev->type == TYPE_RED) {
+        handleDoubleRed(prev);
     }
-
-    if (node->parent->parent == nullptr) {
-        return;
-    }
-
-    insertFix(node);
 }
 
 
 void RedBlackTree::Delete(int key) {
-    RBTnodePtr node = root;
-    RBTnodePtr z = TNULL;
-    RBTnodePtr x, y;
-    while (node != TNULL) {
-        if (node->data == key) {
-            z = node;
-        }
+    Delete(key, nullptr);
+}
 
-        if (node->data <= key) {
-            node = node->right;
+bool RedBlackTree::Query(int key) {
+    return findNode(key) != nullptr;
+}
+
+void RedBlackTree::Delete(int key, Node *theNode) {
+    Node *nodeToDelete = nullptr;
+    // 1. find the place to delete
+    if (theNode == nullptr) {
+        Node *foundNode = findNode(key);
+        if (foundNode->leftChild != nullptr && foundNode->rightChild != nullptr) {
+            nodeToDelete = findMin(foundNode->rightChild);
+            int temp = nodeToDelete->key;
+            nodeToDelete->key = foundNode->key;
+            foundNode->key = temp;
+            Delete(-1, nodeToDelete);
+            return;
         } else {
-            node = node->left;
+            nodeToDelete = foundNode;
         }
-    }
-
-    if (z == TNULL) {
-        cout << "Key not found in the tree" << endl;
-        return;
-    }
-
-    y = z;
-    //Save the color of nodeToBeDeleted in origrinalColor.
-    int y_original_color = y->color;
-    if (z->left == TNULL) {
-        x = z->right;
-        rbTransplant(z, z->right);
-    } else if (z->right == TNULL) {
-        x = z->left;
-        rbTransplant(z, z->left);
     } else {
-        y = minimum(z->right);
-        y_original_color = y->color;
-        x = y->right;
-        if (y->parent == z) {
-            x->parent = y;
-        } else {
-            rbTransplant(y, y->right);
-            y->right = z->right;
-            y->right->parent = y;
-        }
-
-        rbTransplant(z, y);
-        //Set the color of y with originalColor.
-        y->left = z->left;
-        y->left->parent = y;
-        y->color = z->color;
+        nodeToDelete = theNode;
     }
-    delete z;
-    //If the originalColor is BLACK, invoke DeleteFix(x).
-    if (y_original_color == 0) {
-        deleteFix(x);
+
+    // 2. delete and mark the double black if necessary
+    // the node will only have one child here
+    assert(!(nodeToDelete->leftChild != nullptr && nodeToDelete->rightChild != nullptr));
+    if (nodeToDelete->type == TYPE_RED) {
+        // if the node is red, simply delete the node
+        DeleteLeafNode(nodeToDelete);
+    } else {
+        if (nodeToDelete->leftChild != nullptr) {
+            // the left child is red
+            nodeToDelete->key = nodeToDelete->leftChild->key;
+            DeleteLeafNode(nodeToDelete->leftChild);
+        } else if (nodeToDelete->rightChild != nullptr) {
+            // the right child is red
+            nodeToDelete->key = nodeToDelete->rightChild->key;
+            DeleteLeafNode(nodeToDelete->rightChild);
+        } else {
+            // the node has two nil(black) child
+            nodeToDelete->type = TYPE_DOUBLE_BLACK;
+            // 3. handle double black node
+            if (nodeToDelete != root) {
+                handleDoubleBlack(nodeToDelete);
+            }
+            DeleteLeafNode(nodeToDelete);
+        }
+    }
+
+}
+
+RedBlackTree::Node *RedBlackTree::findNode(int key) {
+    Node *ptr = root;
+    while (ptr != nullptr) {
+        if (key == ptr->key) {
+            break;
+        } else if (key > ptr->key) {
+            ptr = ptr->rightChild;
+        } else {
+            ptr = ptr->leftChild;
+        }
+    }
+    return ptr;
+}
+
+
+RedBlackTree::Node *RedBlackTree::leftRotate(RedBlackTree::Node *node) {
+    Node *theParent = node->parent;
+    Node *u = node;
+    Node *v = u->rightChild;
+    assert(u != nullptr && v != nullptr);
+    Node *A = u->leftChild;
+    Node *B = v->leftChild;
+    Node *C = v->rightChild;
+
+    u->rightChild = B;
+    if (B != nullptr) {
+        B->parent = u;
+    }
+    v->leftChild = u;
+    u->parent = v;
+    v->parent = theParent;
+    if (theParent != nullptr) {
+        if (u == theParent->leftChild) {
+            theParent->leftChild = v;
+        } else {
+            theParent->rightChild = v;
+        }
+    } else {
+        // the node is the root
+        root = v;
+    }
+
+    return v;
+}
+
+RedBlackTree::Node *RedBlackTree::rightRotate(RedBlackTree::Node *node) {
+    Node *theParent = node->parent;
+    Node *v = node;
+    Node *u = v->leftChild;
+    assert(u != nullptr && v != nullptr);
+    Node *A = u->leftChild;
+    Node *B = u->rightChild;
+    Node *C = v->rightChild;
+
+    v->leftChild = B;
+    if (B != nullptr) {
+        B->parent = v;
+    }
+    u->rightChild = v;
+    v->parent = u;
+    u->parent = theParent;
+    if (theParent != nullptr) {
+        if (v == theParent->leftChild) {
+            theParent->leftChild = u;
+        } else {
+            theParent->rightChild = u;
+        }
+    } else {
+        // the node is the root
+        root = u;
+    }
+
+    return u;
+}
+
+// The child of the input node is red, and the node is also red
+void RedBlackTree::handleDoubleRed(RedBlackTree::Node *node) {
+    if (node->parent != nullptr && node == node->parent->rightChild) {
+        handleDoubleRedOnRight(node);
+    } else {
+        handleDoubleRedOnLeft(node);
+    }
+}
+
+void RedBlackTree::handleDoubleRedOnLeft(RedBlackTree::Node *node) {
+    bool isLeftChildRed = false;
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+    Node *v = nullptr;
+
+    if (node->leftChild != nullptr && node->leftChild->type == TYPE_RED) {
+        isLeftChildRed = true;
+        v = node->leftChild;
+    } else {
+        isLeftChildRed = false;
+        v = node->rightChild;
+    }
+
+    if (siblingNode != nullptr && siblingNode->type == TYPE_RED) {
+        // case 1
+        node->type = TYPE_BLACK;
+        siblingNode->type = TYPE_BLACK;
+        parentNode->type = TYPE_RED;
+        if (parentNode == root) {
+            parentNode->type = TYPE_BLACK;
+        } else if (parentNode->parent->type == TYPE_BLACK) {
+            return;
+        } else {
+            handleDoubleRed(parentNode->parent);
+        }
+    } else {
+        // case 2
+        if (node->leftChild == v) {
+            // case 2.1
+            node->type = TYPE_BLACK;
+            parentNode->type = TYPE_RED;
+            rightRotate(parentNode);
+        } else {
+            // case 2.2
+            leftRotate(node);
+            handleDoubleRed(v);
+        }
+    }
+}
+
+void RedBlackTree::handleDoubleRedOnRight(RedBlackTree::Node *node) {
+    bool isLeftChildRed = false;
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+    Node *v = nullptr;
+
+    if (node->leftChild != nullptr && node->leftChild->type == TYPE_RED) {
+        isLeftChildRed = true;
+        v = node->leftChild;
+    } else {
+        isLeftChildRed = false;
+        v = node->rightChild;
+    }
+
+    if (siblingNode != nullptr && siblingNode->type == TYPE_RED) {
+        // case 1
+        node->type = TYPE_BLACK;
+        siblingNode->type = TYPE_BLACK;
+        parentNode->type = TYPE_RED;
+        if (parentNode == root) {
+            parentNode->type = TYPE_BLACK;
+        } else if (parentNode->parent->type == TYPE_BLACK) {
+            return;
+        } else {
+            handleDoubleRed(parentNode->parent);
+        }
+    } else {
+        // case 2
+        if (node->rightChild == v) {
+            // case 2.1
+            node->type = TYPE_BLACK;
+            parentNode->type = TYPE_RED;
+            leftRotate(parentNode);
+        } else {
+            // case 2.2
+            rightRotate(node);
+            handleDoubleRed(v);
+        }
     }
 }
 
 
-//int main() {
-//    RedBlackTree rbt;
-//    rbt.Insert(55);
-//    rbt.Insert(40);
-//    rbt.Insert(65);
-//    rbt.Insert(60);
-//    rbt.Insert(75);
-//    rbt.Insert(57);
-////    for (int i = 0; i < 1000; i++) {
-////        rbt.Insert(i);
-////    }
-////    for (int i = 0; i < 1000; i++) {
-////        rbt.Query(i);
-////    }
-////    for (int i = 0; i < 1000; i++) {
-////        rbt.Delete(i);
-////    }
-////    for (int i = 0; i < 1000; i++) {
-////        rbt.Query(i);
-////    }
-////    rbt.printTree();
-////    cout << endl
-////         << "After deleting" << endl;
-//    rbt.Delete(40);
-//};
+// The node is double black. Also, although the node might have value, it might be double black NIL node
+void RedBlackTree::handleDoubleBlack(RedBlackTree::Node *node) {
+    if (node->parent != nullptr && node == node->parent->leftChild) {
+        handleDoubleBlackLeft(node);
+    } else {
+        handleDoubleBlackRight(node);
+    }
+}
+
+RedBlackTree::Node *RedBlackTree::findMin(RedBlackTree::Node *node) {
+    while (node->leftChild != nullptr) {
+        node = node->leftChild;
+    }
+    return node;
+}
+
+
+void RedBlackTree::DeleteLeafNode(RedBlackTree::Node *theNode) {
+    if (theNode->parent == nullptr) {
+        // root node
+        assert(theNode == root && root->leftChild == nullptr && root->rightChild == nullptr);
+        delete theNode;
+        root = nullptr;
+    } else {
+        if (theNode->parent->leftChild == theNode) {
+            theNode->parent->leftChild = nullptr;
+        } else {
+            theNode->parent->rightChild = nullptr;
+        }
+        delete theNode;
+    }
+}
+
+void RedBlackTree::handleDoubleBlackLeft(RedBlackTree::Node *node) {
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+
+    if (siblingNode == nullptr || siblingNode->type == TYPE_BLACK) {
+        // case 1
+        if ((siblingNode->leftChild == nullptr || siblingNode->leftChild->type == TYPE_BLACK)
+        && (siblingNode->rightChild == nullptr || siblingNode->rightChild->type == TYPE_BLACK)) {
+            // case 1.1
+            node->type = TYPE_BLACK;
+            siblingNode->type = TYPE_RED;
+            if (parentNode->type == TYPE_RED) {
+                parentNode->type = TYPE_BLACK;
+            } else {
+                if (parentNode == root) {
+                    parentNode->type = TYPE_BLACK;
+                } else {
+                    parentNode->type = TYPE_DOUBLE_BLACK;
+                    handleDoubleBlack(parentNode);
+                }
+            }
+        } else if (siblingNode->rightChild != nullptr && siblingNode->rightChild->type == TYPE_RED) {
+            // case 1.2
+            node->type = TYPE_BLACK;
+            siblingNode->rightChild->type = TYPE_BLACK;
+            siblingNode->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            leftRotate(parentNode);
+        } else {
+            // case 1.3
+            node->type = TYPE_BLACK;
+            siblingNode->leftChild->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            rightRotate(siblingNode);
+            leftRotate(parentNode);
+        }
+    } else {
+        // case 2
+        parentNode->type = TYPE_RED;
+        siblingNode->type = TYPE_BLACK;
+        leftRotate(parentNode);
+        handleDoubleBlack(node);
+    }
+}
+
+void RedBlackTree::handleDoubleBlackRight(RedBlackTree::Node *node) {
+
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+
+    if (siblingNode == nullptr || siblingNode->type == TYPE_BLACK) {
+        // case 1
+        if ((siblingNode->leftChild == nullptr || siblingNode->leftChild->type == TYPE_BLACK)
+            && (siblingNode->rightChild == nullptr || siblingNode->rightChild->type == TYPE_BLACK)) {
+            // case 1.1
+            node->type = TYPE_BLACK;
+            siblingNode->type = TYPE_RED;
+            if (parentNode->type == TYPE_RED) {
+                parentNode->type = TYPE_BLACK;
+            } else {
+                if (parentNode == root) {
+                    parentNode->type = TYPE_BLACK;
+                } else {
+                    parentNode->type = TYPE_DOUBLE_BLACK;
+                    handleDoubleBlack(parentNode);
+                }
+            }
+        } else if (siblingNode->leftChild != nullptr && siblingNode->leftChild->type == TYPE_RED) {
+            // case 1.2
+            node->type = TYPE_BLACK;
+            siblingNode->leftChild->type = TYPE_BLACK;
+            siblingNode->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            rightRotate(parentNode);
+        } else {
+            // case 1.3
+            // TODO: check
+            node->type = TYPE_BLACK;
+            siblingNode->rightChild->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            leftRotate(siblingNode);
+            rightRotate(parentNode);
+        }
+    } else {
+        // case 2
+        parentNode->type = TYPE_RED;
+        siblingNode->type = TYPE_BLACK;
+        rightRotate(parentNode);
+        handleDoubleBlack(node);
+    }
+}
+
+RedBlackTree::Node *RedBlackTree::Node::getSibling() {
+    assert(this->parent != nullptr);
+
+    if (this->parent->leftChild == this) {
+        return this->parent->rightChild;
+    } else {
+        return this->parent->leftChild;
+    }
+}
+
+RedBlackTree::Node::Node(int key) {
+        this->key = key;
+        this->type = TYPE_RED;
+        this->parent = nullptr;
+        this->leftChild = nullptr;
+        this->rightChild = nullptr;
+}
