@@ -14,8 +14,32 @@ RedBlackTree::RedBlackTree() {
     root = nullptr;
 }
 
+int RedBlackTree::checkRep(RedBlackTree::Node *node) {
+    if (node == nullptr) {
+        return 1;
+    }
+
+    assert(node->type == TYPE_BLACK || node->type == TYPE_RED);
+    int leftDepth = checkRep(node->leftChild);
+    int rightDepth = checkRep(node->rightChild);
+
+    assert(leftDepth == rightDepth);
+
+    if (node->type == TYPE_RED) {
+        assert(node->leftChild == nullptr || node->leftChild->type != TYPE_RED);
+        assert(node->rightChild == nullptr || node->rightChild->type != TYPE_RED);
+    }
+
+    if (node->type == TYPE_BLACK) {
+        return leftDepth + 1;
+    } else {
+        return leftDepth;
+    }
+}
+
 void RedBlackTree::checkRep() {
-    return;
+    assert(root == nullptr || root->type == TYPE_BLACK);
+    checkRep(root);
 }
 
 void RedBlackTree::Insert(int key) {
@@ -70,6 +94,7 @@ void RedBlackTree::Delete(int key, Node *theNode) {
             nodeToDelete->key = foundNode->key;
             foundNode->key = temp;
             Delete(-1, nodeToDelete);
+            return;
         } else {
             nodeToDelete = foundNode;
         }
@@ -96,7 +121,9 @@ void RedBlackTree::Delete(int key, Node *theNode) {
             // the node has two nil(black) child
             nodeToDelete->type = TYPE_DOUBLE_BLACK;
             // 3. handle double black node
-            handleDoubleRed(nodeToDelete);
+            if (nodeToDelete != root) {
+                handleDoubleBlack(nodeToDelete);
+            }
             DeleteLeafNode(nodeToDelete);
         }
     }
@@ -272,7 +299,11 @@ void RedBlackTree::handleDoubleRedOnRight(RedBlackTree::Node *node) {
 
 // The node is double black. Also, although the node might have value, it might be double black NIL node
 void RedBlackTree::handleDoubleBlack(RedBlackTree::Node *node) {
-    // TODO
+    if (node->parent != nullptr && node == node->parent->leftChild) {
+        handleDoubleBlackLeft(node);
+    } else {
+        handleDoubleBlackRight(node);
+    }
 }
 
 RedBlackTree::Node *RedBlackTree::findMin(RedBlackTree::Node *node) {
@@ -296,6 +327,96 @@ void RedBlackTree::DeleteLeafNode(RedBlackTree::Node *theNode) {
             theNode->parent->rightChild = nullptr;
         }
         delete theNode;
+    }
+}
+
+void RedBlackTree::handleDoubleBlackLeft(RedBlackTree::Node *node) {
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+
+    if (siblingNode == nullptr || siblingNode->type == TYPE_BLACK) {
+        // case 1
+        if ((siblingNode->leftChild == nullptr || siblingNode->leftChild->type == TYPE_BLACK)
+        && (siblingNode->rightChild == nullptr || siblingNode->rightChild->type == TYPE_BLACK)) {
+            // case 1.1
+            node->type = TYPE_BLACK;
+            siblingNode->type = TYPE_RED;
+            if (parentNode->type == TYPE_RED) {
+                parentNode->type = TYPE_BLACK;
+            } else {
+                if (parentNode == root) {
+                    parentNode->type = TYPE_BLACK;
+                } else {
+                    parentNode->type = TYPE_DOUBLE_BLACK;
+                    handleDoubleBlack(parentNode);
+                }
+            }
+        } else if (siblingNode->rightChild != nullptr && siblingNode->rightChild->type == TYPE_RED) {
+            // case 1.2
+            node->type = TYPE_BLACK;
+            siblingNode->rightChild->type = TYPE_BLACK;
+            siblingNode->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            leftRotate(parentNode);
+        } else {
+            // case 1.3
+            siblingNode->leftChild->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            rightRotate(siblingNode);
+            leftRotate(parentNode);
+        }
+    } else {
+        // case 2
+        parentNode->type = TYPE_RED;
+        siblingNode->type = TYPE_BLACK;
+        leftRotate(parentNode);
+        handleDoubleBlack(node);
+    }
+}
+
+void RedBlackTree::handleDoubleBlackRight(RedBlackTree::Node *node) {
+
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+
+    if (siblingNode == nullptr || siblingNode->type == TYPE_BLACK) {
+        // case 1
+        if ((siblingNode->leftChild == nullptr || siblingNode->leftChild->type == TYPE_BLACK)
+            && (siblingNode->rightChild == nullptr || siblingNode->rightChild->type == TYPE_BLACK)) {
+            // case 1.1
+            node->type = TYPE_BLACK;
+            siblingNode->type = TYPE_RED;
+            if (parentNode->type == TYPE_RED) {
+                parentNode->type = TYPE_BLACK;
+            } else {
+                if (parentNode == root) {
+                    parentNode->type = TYPE_BLACK;
+                } else {
+                    parentNode->type = TYPE_DOUBLE_BLACK;
+                    handleDoubleBlack(parentNode);
+                }
+            }
+        } else if (siblingNode->leftChild != nullptr && siblingNode->leftChild->type == TYPE_RED) {
+            // case 1.2
+            node->type = TYPE_BLACK;
+            siblingNode->leftChild->type = TYPE_BLACK;
+            siblingNode->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            rightRotate(parentNode);
+        } else {
+            // case 1.3
+            // TODO: check
+            siblingNode->rightChild->type = parentNode->type;
+            parentNode->type = TYPE_BLACK;
+            leftRotate(siblingNode);
+            rightRotate(parentNode);
+        }
+    } else {
+        // case 2
+        parentNode->type = TYPE_RED;
+        siblingNode->type = TYPE_BLACK;
+        rightRotate(parentNode);
+        handleDoubleBlack(node);
     }
 }
 

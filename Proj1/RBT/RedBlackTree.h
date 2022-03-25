@@ -27,6 +27,8 @@ public:
     void checkRep();
 
 private:
+    int checkRep(Node*);
+
     Node *root;
 
     Node *findNode(int);
@@ -44,6 +46,10 @@ private:
     void handleDoubleRedOnLeft(Node *node);
 
     void handleDoubleRedOnRight(Node *node);
+
+    void handleDoubleBlackLeft(Node *node);
+
+    void handleDoubleBlackRight(Node *node);
 
     void handleDoubleBlack(Node *node);
 
