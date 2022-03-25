@@ -41,6 +41,10 @@ private:
 
     void handleDoubleRed(Node *node);
 
+    void handleDoubleRedOnLeft(Node *node);
+
+    void handleDoubleRedOnRight(Node *node);
+
     void handleDoubleBlack(Node *node);
 
     Node *findMin(Node *node);

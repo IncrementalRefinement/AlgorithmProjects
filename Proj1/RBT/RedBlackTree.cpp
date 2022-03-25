@@ -18,7 +18,6 @@ void RedBlackTree::checkRep() {
     return;
 }
 
-// TODO: 笔记上的插入之后的旋转针对的是 u 是左子节点的情况，我想如果u是右子节点，这里额外做一次旋转来解决这个问题(当然也可以在handle double red 里面做)
 void RedBlackTree::Insert(int key) {
     // 1. find the place to insert
     Node *prev = nullptr;
@@ -83,6 +82,7 @@ void RedBlackTree::Delete(int key, Node *theNode) {
     assert(!(nodeToDelete->leftChild != nullptr && nodeToDelete->rightChild != nullptr));
     if (nodeToDelete->type == TYPE_RED) {
         // if the node is red, simply delete the node
+        DeleteLeafNode(nodeToDelete);
     } else {
         if (nodeToDelete->leftChild != nullptr) {
             // the left child is red
@@ -97,6 +97,7 @@ void RedBlackTree::Delete(int key, Node *theNode) {
             nodeToDelete->type = TYPE_DOUBLE_BLACK;
             // 3. handle double black node
             handleDoubleRed(nodeToDelete);
+            DeleteLeafNode(nodeToDelete);
         }
     }
 
@@ -135,14 +136,16 @@ RedBlackTree::Node *RedBlackTree::leftRotate(RedBlackTree::Node *node) {
     v->parent = theParent;
     if (theParent != nullptr) {
         if (u == theParent->leftChild) {
-            v = theParent->leftChild;
+            theParent->leftChild = v;
         } else {
-            v = theParent->rightChild;
+            theParent->rightChild = v;
         }
     } else {
         // the node is the root
         root = v;
     }
+
+    return v;
 }
 
 RedBlackTree::Node *RedBlackTree::rightRotate(RedBlackTree::Node *node) {
@@ -163,20 +166,109 @@ RedBlackTree::Node *RedBlackTree::rightRotate(RedBlackTree::Node *node) {
     u->parent = theParent;
     if (theParent != nullptr) {
         if (v == theParent->leftChild) {
-            u = theParent->leftChild;
+            theParent->leftChild = u;
         } else {
-            u = theParent->rightChild;
+            theParent->rightChild = u;
         }
     } else {
         // the node is the root
         root = u;
     }
+
+    return u;
 }
 
 // The child of the input node is red, and the node is also red
 void RedBlackTree::handleDoubleRed(RedBlackTree::Node *node) {
-    // TODO
+    if (node->parent != nullptr && node == node->parent->rightChild) {
+        handleDoubleRedOnRight(node);
+    } else {
+        handleDoubleRedOnLeft(node);
+    }
 }
+
+void RedBlackTree::handleDoubleRedOnLeft(RedBlackTree::Node *node) {
+    bool isLeftChildRed = false;
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+    Node *v = nullptr;
+
+    if (node->leftChild != nullptr && node->leftChild->type == TYPE_RED) {
+        isLeftChildRed = true;
+        v = node->leftChild;
+    } else {
+        isLeftChildRed = false;
+        v = node->rightChild;
+    }
+
+    if (siblingNode != nullptr && siblingNode->type == TYPE_RED) {
+        // case 1
+        node->type = TYPE_BLACK;
+        siblingNode->type = TYPE_BLACK;
+        parentNode->type = TYPE_RED;
+        if (parentNode == root) {
+            parentNode->type = TYPE_BLACK;
+        } else if (parentNode->parent->type == TYPE_BLACK) {
+            return;
+        } else {
+            handleDoubleRed(parentNode->parent);
+        }
+    } else {
+        // case 2
+        if (node->leftChild == v) {
+            // case 2.1
+            node->type = TYPE_BLACK;
+            parentNode->type = TYPE_RED;
+            rightRotate(parentNode);
+        } else {
+            // case 2.2
+            leftRotate(node);
+            handleDoubleRed(v);
+        }
+    }
+}
+
+void RedBlackTree::handleDoubleRedOnRight(RedBlackTree::Node *node) {
+    bool isLeftChildRed = false;
+    Node *parentNode = node->parent;
+    Node *siblingNode = node->getSibling();
+    Node *v = nullptr;
+
+    if (node->leftChild != nullptr && node->leftChild->type == TYPE_RED) {
+        isLeftChildRed = true;
+        v = node->leftChild;
+    } else {
+        isLeftChildRed = false;
+        v = node->rightChild;
+    }
+
+    if (siblingNode != nullptr && siblingNode->type == TYPE_RED) {
+        // case 1
+        node->type = TYPE_BLACK;
+        siblingNode->type = TYPE_BLACK;
+        parentNode->type = TYPE_RED;
+        if (parentNode == root) {
+            parentNode->type = TYPE_BLACK;
+        } else if (parentNode->parent->type == TYPE_BLACK) {
+            return;
+        } else {
+            handleDoubleRed(parentNode->parent);
+        }
+    } else {
+        // case 2
+        if (node->rightChild == v) {
+            // case 2.1
+            node->type = TYPE_BLACK;
+            parentNode->type = TYPE_RED;
+            leftRotate(parentNode);
+        } else {
+            // case 2.2
+            rightRotate(node);
+            handleDoubleRed(v);
+        }
+    }
+}
+
 
 // The node is double black. Also, although the node might have value, it might be double black NIL node
 void RedBlackTree::handleDoubleBlack(RedBlackTree::Node *node) {
