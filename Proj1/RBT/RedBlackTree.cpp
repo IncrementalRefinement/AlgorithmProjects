@@ -360,6 +360,7 @@ void RedBlackTree::handleDoubleBlackLeft(RedBlackTree::Node *node) {
             leftRotate(parentNode);
         } else {
             // case 1.3
+            node->type = TYPE_BLACK;
             siblingNode->leftChild->type = parentNode->type;
             parentNode->type = TYPE_BLACK;
             rightRotate(siblingNode);
@@ -406,6 +407,7 @@ void RedBlackTree::handleDoubleBlackRight(RedBlackTree::Node *node) {
         } else {
             // case 1.3
             // TODO: check
+            node->type = TYPE_BLACK;
             siblingNode->rightChild->type = parentNode->type;
             parentNode->type = TYPE_BLACK;
             leftRotate(siblingNode);

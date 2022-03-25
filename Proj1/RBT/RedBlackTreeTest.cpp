@@ -91,7 +91,7 @@ void SpecialTest() {
 void RandomInsertDeleteTest() {
     auto *theTree = new RedBlackTree();
     std::vector<int> checkArray;
-    int count = 100;
+    int count = 10000;
     checkArray.resize(count);
     for (int i = 0; i < count; i++) {
         checkArray[i] = i;
@@ -105,8 +105,8 @@ void RandomInsertDeleteTest() {
         theTree->checkRep();
     }
 
-    // seed = std::chrono::system_clock::now().time_since_epoch().count();
-    // std::shuffle(checkArray.begin(), checkArray.end(), std::default_random_engine(seed));
+     seed = std::chrono::system_clock::now().time_since_epoch().count();
+     std::shuffle(checkArray.begin(), checkArray.end(), std::default_random_engine(seed));
     for (int i = 0; i < count; i++) {
         theTree->Delete(checkArray[i]);
         assert(!theTree->Query(checkArray[i]));
@@ -117,10 +117,10 @@ void RandomInsertDeleteTest() {
 }
 
 int main() {
-//    SanityTest();
-//    InsertTest();
-//    QueryTest();
-//    DeleteTest();
-//    SpecialTest();
+    SanityTest();
+    InsertTest();
+    QueryTest();
+    DeleteTest();
+    SpecialTest();
     RandomInsertDeleteTest();
 }
