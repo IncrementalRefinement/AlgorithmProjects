@@ -20,9 +20,9 @@ skew heap
 
 一个interface,  继承 
 
-陆天: 写 heap 接口,  斐波那契堆, binary heap. Dijkstra 算法
+a: 写 heap 接口,  斐波那契堆, binary heap. Dijkstra 算法
 
-林炬乙 : skew heap, 二项式堆 . 
+ b: skew heap, 二项式堆 . 
 
 各自写单元测试. 性能测试. 
 
