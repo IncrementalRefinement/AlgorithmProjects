@@ -1,10 +1,12 @@
 package heap;
 
-public interface Heap<E> {
+import java.util.Comparator;
 
-    public void insert(E element);
+public interface Heap <K extends Comparable<K>, V> {
 
-    public E pop();
+    public void push(K key, V value);
 
-    public E top();
+    public V pop();
+
+    public void decreaseKey(K before, K after);
 }
