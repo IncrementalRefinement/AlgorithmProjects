@@ -57,7 +57,7 @@ public abstract class BaseHeapTest {
         }
 
         for (int i = 0; i < count; i++) {
-            assertEquals( String.valueOf(i - 1), theHeap.pop());
+            assertEquals( String.valueOf(i), theHeap.pop());
         }
     }
 }
