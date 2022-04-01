@@ -18,6 +18,7 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
             this.degree = 0;
             this.key = theKey;
             this.value = theValue;
+            this.before = null;
             this.after = null;
             this.parent = null;
             this.children = null;
@@ -62,6 +63,7 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
             // 2. remove the current minNoe
             minNode = ret.after;
             detachNode(ret);
+            keyToNodeMap.remove(ret.key);
             N--;
 
             // 3. consolidate
@@ -72,9 +74,9 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
 
     @Override
     public void decreaseKey(K before, K after) {
-        // 1. update the map
         assert(before.compareTo(after) > 0);
 
+        // 1. update the map
         Node theNode = keyToNodeMap.get(before);
         theNode.key = after;
         keyToNodeMap.remove(before);
@@ -88,17 +90,123 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
         }
     }
 
-    private void insertBefore(Node position, Node insertedNode) {}
+    private void insertBefore(Node position, Node insertedNode) {
+        insertedNode.before = position.before;
+        if (position.before != null) {
+            position.before.after = insertedNode;
+        }
+        position.before = insertedNode;
+        insertedNode.after = position;
+    }
 
-    private void insertAfter(Node position, Node insertedNode) {}
+    private void insertAfter(Node position, Node insertedNode) {
+        insertedNode.after = position.after;
+        if (position.after != null) {
+            position.after.before = insertedNode;
+        }
+        position.after = insertedNode;
+        insertedNode.before = position;
+    }
 
-    private void detachNode(Node theNode) {}
+    // detach a node from all its relationship with others
+    private void detachNode(Node theNode) {
+        if (theNode.before != null) {
+            theNode.before.after = theNode.after;
+        }
 
-    private void consolidate() {}
+        if (theNode.after != null) {
+            theNode.after.before = theNode.before;
+        }
 
-    private void cut(Node theNode, Node parentNode) {}
+        theNode.before = null;
+        theNode.after = null;
+        theNode.parent = null;
+        theNode.children = null;
+    }
 
-    private void cascadeCut(Node theNode) {}
+    private void consolidate() {
+        Map<Integer, Node> degreeToNode = new HashMap<>();
+        Node currentNode = minNode;
+        minNode = null;
 
-    private void insertIntoRootList(Node theNode) {}
+        while (currentNode != null) {
+            Node next = currentNode.after;
+            int degree = currentNode.degree;
+            while (degreeToNode.get(degree) != null) {
+                Node other = degreeToNode.get(degree);
+                currentNode = mergeTwoNode(currentNode, other);
+                degreeToNode.remove(degree);
+                degree = currentNode.degree;
+            }
+            degreeToNode.put(degree, currentNode);
+            currentNode = next;
+        }
+
+        for (Node node : degreeToNode.values()) {
+            insertIntoRootList(node);
+        }
+    }
+
+    private Node mergeTwoNode(Node node1, Node node2) {
+        if (node1.key.compareTo(node2.key) < 0) {
+            node1.degree++;
+            node2.mark = false;
+            if (node1.children != null) {
+                insertAfter(node1.children, node2);
+            } else {
+                node1.children = node2;
+                node2.before = null;
+                node2.after = null;
+            }
+            node2.parent = node1;
+            return node1;
+        } else {
+            node2.degree++;
+            node1.mark = false;
+            if (node2.children != null) {
+                insertAfter(node2.children, node1);
+            } else {
+                node2.children = node1;
+                node1.before = null;
+                node1.after = null;
+            }
+            node1.parent = node2;
+            return node2;
+        }
+    }
+
+    private void cut(Node theNode, Node parentNode) {
+        parentNode.degree--;
+        if (theNode == parentNode.children) {
+            parentNode.children = theNode.after;
+        }
+        insertIntoRootList(theNode);
+        theNode.mark = false;
+    }
+
+    private void cascadeCut(Node theNode) {
+        Node parent = theNode.parent;
+        if (parent != null) {
+            if (!parent.mark) {
+                parent.mark = true;
+            } else {
+                cut(theNode, parent);
+                cascadeCut(parent);
+            }
+        }
+    }
+
+    private void insertIntoRootList(Node theNode) {
+        theNode.before = null;
+        theNode.after = null;
+        theNode.parent = null;
+        if (minNode == null) {
+            minNode = theNode;
+        } else if (theNode.key.compareTo(minNode.key) < 0) {
+            insertBefore(minNode, theNode);
+            minNode = theNode;
+        } else {
+            insertAfter(minNode, theNode);
+        }
+    }
 }
