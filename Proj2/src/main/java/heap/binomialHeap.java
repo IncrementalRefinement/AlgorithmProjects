@@ -115,6 +115,8 @@ public class binomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
                         prev.sibling = next;
                     }
 
+
+
                     linkBinomialTrees(next, curr3);
                     curr3 = next;
                 }
