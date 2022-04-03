@@ -34,3 +34,11 @@ else:
 3. reverse the new heap link list. In this way, the degree of roots will have a ascend order.
 4. merge new heap and old heap.
 
+Problem
+
+1. insert7 , head = 4 instead of 0 . head don't point root.
+2. 
+
+
+
+2.  I want swap key and value, but it would cause keyToNodeMap fail.
