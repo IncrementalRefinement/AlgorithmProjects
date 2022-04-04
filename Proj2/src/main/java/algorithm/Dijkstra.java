@@ -1,13 +1,47 @@
 package algorithm;
 
+import heap.BinaryHeap;
 import heap.Heap;
 import heap.Vertex;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.*;
 
 public class Dijkstra {
+    public static void main(String[] args) throws FileNotFoundException {
+        List<Vertex> vertexs = new ArrayList<>();
+        List<List<Vertex>> graphneigb = new ArrayList<>();
+        List<Map<Vertex, Long>> graphdistance = new ArrayList<>();
+        File dataset = new File("src/dataset/DCdata.dat");
+        Scanner sc = new Scanner(dataset);
+        int nodeNum = sc.nextInt();
+        for (int i = 0; i < nodeNum; i++) {
+            vertexs.add(new Vertex());
+            graphneigb.add(new ArrayList<>());
+            graphdistance.add(new HashMap<>());
+        }
+        int edgeNum = sc.nextInt();
+        while (sc.hasNext()) {
+            int source = sc.nextInt();
+            int target = sc.nextInt();
+            Vertex trg = vertexs.get(target);
+            graphneigb.get(source).add(trg);
+            long traveltime = sc.nextLong();
+            graphdistance.get(source).put(trg, traveltime);
+            long spatialDistanceInMeters = sc.nextLong();// ignore this data.
+        }
+        for (int i = 0; i < nodeNum; i++) {
+            vertexs.get(i).setDirectDistance(graphdistance.get(i));
+            vertexs.get(i).setNeighbors(graphneigb.get(i));
+        }
+
+        for (int i = 0; i < 1001; i++) {
+            search(vertexs,vertexs.get(0),new BinaryHeap<Long, Vertex>());
+        }
+
+
+    }
 
     public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> pq) {
 
@@ -26,7 +60,7 @@ public class Dijkstra {
             vertexInHeap.remove(theVertex);
             for (Vertex neighbor : theVertex.getNeighbors()) {
                 if (neighbor.getVertexBefore() == null) {
-                    // the vertex that is firstly visited will be add to the pq & the set
+                    // the vertex that is firstly visited will be added to the pq & the set
                     neighbor.setVertexBefore(theVertex);
                     neighbor.setDistanceFromSource(theVertex.getDistanceFromSource() + theVertex.getDirectDistance(neighbor));
                     vertexInHeap.add(neighbor);
