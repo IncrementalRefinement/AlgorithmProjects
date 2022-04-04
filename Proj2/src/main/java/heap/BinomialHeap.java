@@ -46,6 +46,10 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
     }
 
     private void merge(BinomialHeap h2) {
+        if (head == null) {
+            head = h2.head;
+            return;
+        }
         Node curr1 = head;
         Node curr2 = h2.head;
         Node curr3;
@@ -57,7 +61,7 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
             curr2 = curr2.sibling;
         }
 
-        Node temp = curr3;
+        Node temphead = curr3;
 
         // merge two heaps without taking care of trees with same degree
         // the roots of the tree must be in acscending order of degree
@@ -86,34 +90,34 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
         }
 
         // scan the list and repeatedly merge binomial trees with same degree
-        curr3 = temp;
-        Node prev = curr3;
-        Node next = curr3.sibling;
+        Node cur = temphead;
+        Node prev = temphead;
+        Node next = cur.sibling;
 
         while (next != null) {
             // if two adjacent tree roots have different degree or 3 consecutive roots have same degree
             // move to the next tree. We only merge the last two roots in 3 consecutive roots;
-            if ((curr3.degree != next.degree) || (next.sibling != null && curr3.degree == next.sibling.degree)) {
-                prev = curr3;
-                curr3 = next;
+            if ((cur.degree != next.degree) || (next.sibling != null && cur.degree == next.sibling.degree)) {
+                prev = cur;
+                cur = next;
             } else {
                 // otherwise repeatdly merge binomial trees with same degree
-                if (curr3.key.compareTo(next.key) <= 0) {
-                    curr3.sibling = next.sibling;
-                    linkBinomialTrees(curr3, next);// curr3 as parent
+                if (cur.key.compareTo(next.key) <= 0) {
+                    cur.sibling = next.sibling;
+                    linkBinomialTrees(cur, next);// curr3 as parent
                 } else {
-                    if (prev == curr3) {
-                        temp = next;// head merged
+                    if (temphead == cur) {
+                        temphead = next;// head merged
                     } else {
                         prev.sibling = next;
                     }
-                    linkBinomialTrees(next, curr3);// next as parent
-                    curr3 = next;
+                    linkBinomialTrees(next, cur);// next as parent
+                    cur = next;
                 }
             }
-            next = curr3.sibling;
+            next = cur.sibling;
         }
-        head = temp;
+        head = temphead;
     }
 
     private Node reverlist(Node head) {
@@ -214,4 +218,5 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
             theNode = theNode.parent;
         }
     }
+
 }
