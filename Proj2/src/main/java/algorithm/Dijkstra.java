@@ -1,18 +1,21 @@
 package algorithm;
 
 import heap.BinaryHeap;
+import heap.FibonacciHeap;
 import heap.Heap;
 import heap.Vertex;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 
 public class Dijkstra {
-    public static void main(String[] args) throws FileNotFoundException {
-        List<Vertex> vertexs = new ArrayList<>();
-        List<List<Vertex>> graphneigb = new ArrayList<>();
-        List<Map<Vertex, Long>> graphdistance = new ArrayList<>();
+    static List<Vertex> vertexs;
+    static List<List<Vertex>> graphneigb;
+    static List<Map<Vertex, Long>> graphdistance;
+    public static void main(String[] args) throws IOException {
+        vertexs = new ArrayList<>();
+        graphneigb = new ArrayList<>();
+        graphdistance = new ArrayList<>();
         File dataset = new File("src/dataset/DCdata.dat");
         Scanner sc = new Scanner(dataset);
         int nodeNum = sc.nextInt();
@@ -27,20 +30,48 @@ public class Dijkstra {
             int target = sc.nextInt();
             Vertex trg = vertexs.get(target);
             graphneigb.get(source).add(trg);
-            long traveltime = sc.nextLong();
+            long traveltime = (long) sc.nextDouble();
             graphdistance.get(source).put(trg, traveltime);
-            long spatialDistanceInMeters = sc.nextLong();// ignore this data.
+            double spatialDistanceInMeters = sc.nextDouble();// ignore this data.
         }
         for (int i = 0; i < nodeNum; i++) {
             vertexs.get(i).setDirectDistance(graphdistance.get(i));
             vertexs.get(i).setNeighbors(graphneigb.get(i));
         }
 
+//        BinaryHeapEvaluate();
+        FibonacciHeapEvaluate();
+
+    }
+
+    public static void BinaryHeapEvaluate() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinaryHeap.dat"));
         for (int i = 0; i < 1001; i++) {
-            search(vertexs,vertexs.get(0),new BinaryHeap<Long, Vertex>());
+            //At least 1000 pairs of query
+            long startTime=System.currentTimeMillis();   //获取开始时间
+            for (int j = 0; j < 1001; j++) {
+                search(vertexs,vertexs.get(j),new BinaryHeap<Long, Vertex>());
+            }
+            long endTime=System.currentTimeMillis(); //获取结束时间
+            writer.write((endTime - startTime)+" ");
+            writer.newLine();
         }
+        writer.close();
+    }
 
-
+    public static void FibonacciHeapEvaluate() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/FibonacciHeap.dat"));
+        for (int i = 0; i < 1001; i++) {
+            //At least 1000 pairs of query
+            long startTime=System.currentTimeMillis();   //获取开始时间
+            for (int j = 0; j < 1001; j++) {
+                search(vertexs,vertexs.get(j),new FibonacciHeap<Long, Vertex>());
+            }
+            long endTime=System.currentTimeMillis(); //获取结束时间
+            writer.write((endTime - startTime)+" ");
+            writer.newLine();
+        }
+        writer.close();
     }
 
     public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> pq) {
