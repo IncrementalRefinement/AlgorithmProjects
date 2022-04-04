@@ -12,6 +12,7 @@ public class Dijkstra {
     static List<Vertex> vertexs;
     static List<List<Vertex>> graphneigb;
     static List<Map<Vertex, Long>> graphdistance;
+
     public static void main(String[] args) throws IOException {
         vertexs = new ArrayList<>();
         graphneigb = new ArrayList<>();
@@ -48,12 +49,12 @@ public class Dijkstra {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinaryHeap.dat"));
         for (int i = 0; i < 1001; i++) {
             //At least 1000 pairs of query
-            long startTime=System.currentTimeMillis();   //获取开始时间
+            long startTime = System.currentTimeMillis();   //获取开始时间
             for (int j = 0; j < 1001; j++) {
-                search(vertexs,vertexs.get(j),new BinaryHeap<Long, Vertex>());
+                search(vertexs, vertexs.get(j), new BinaryHeap<Long, Vertex>());
             }
-            long endTime=System.currentTimeMillis(); //获取结束时间
-            writer.write((endTime - startTime)+" ");
+            long endTime = System.currentTimeMillis(); //获取结束时间
+            writer.write((endTime - startTime) + " ");
             writer.newLine();
         }
         writer.close();
@@ -63,12 +64,12 @@ public class Dijkstra {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/FibonacciHeap.dat"));
         for (int i = 0; i < 1001; i++) {
             //At least 1000 pairs of query
-            long startTime=System.currentTimeMillis();   //获取开始时间
+            long startTime = System.currentTimeMillis();   //获取开始时间
             for (int j = 0; j < 1001; j++) {
-                search(vertexs,vertexs.get(j),new FibonacciHeap<Long, Vertex>());
+                search(vertexs, vertexs.get(j), new FibonacciHeap<Long, Vertex>());
             }
-            long endTime=System.currentTimeMillis(); //获取结束时间
-            writer.write((endTime - startTime)+" ");
+            long endTime = System.currentTimeMillis(); //获取结束时间
+            writer.write((endTime - startTime) + " ");
             writer.newLine();
         }
         writer.close();
