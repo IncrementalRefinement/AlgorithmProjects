@@ -47,14 +47,13 @@ public class Dijkstra {
 
     public static void BinaryHeapEvaluate() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinaryHeap.dat"));
-        for (int i = 0; i < 1001; i++) {
-            //At least 1000 pairs of query
-            long startTime = System.currentTimeMillis();   //获取开始时间
-            for (int j = 0; j < 1001; j+=150) {
-                search(vertexs, vertexs.get(j), new BinaryHeap<Long, Vertex>());
+        for (int i = 0; i < 100; i++) {
+            //At least 10 pairs of query
+            long implementTime = 0;
+            for (int j = 0; j < 2000; j += 150) {
+                implementTime += search(vertexs, vertexs.get(j), new BinaryHeap<Long, Vertex>());
             }
-            long endTime = System.currentTimeMillis(); //获取结束时间
-            writer.write((endTime - startTime) + " ");
+            writer.write(implementTime + " ");
             writer.newLine();
         }
         writer.close();
@@ -62,20 +61,19 @@ public class Dijkstra {
 
     public static void FibonacciHeapEvaluate() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/FibonacciHeap.dat"));
-        for (int i = 0; i < 1001; i++) {
-            //At least 1000 pairs of query
-            long startTime = System.currentTimeMillis();   //获取开始时间
-            for (int j = 0; j < 1001; j+=150) {
-                search(vertexs, vertexs.get(j), new FibonacciHeap<Long, Vertex>());
+        for (int i = 0; i < 100; i++) {
+            //At least 10 pairs of query
+            long implementTime = 0;
+            for (int j = 0; j < 2000; j += 150) {
+                implementTime += search(vertexs, vertexs.get(j), new FibonacciHeap<Long, Vertex>());
             }
-            long endTime = System.currentTimeMillis(); //获取结束时间
-            writer.write((endTime - startTime) + " ");
+            writer.write(implementTime + " ");
             writer.newLine();
         }
         writer.close();
     }
 
-    public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> pq) {
+    public static long search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> pq) {
 
         for (Vertex vertex : graph) {
             vertex.setVertexBefore(null);
@@ -86,7 +84,7 @@ public class Dijkstra {
 
         source.setVertexBefore(null);
         source.setDistanceFromSource(0);
-
+        long startTime = System.nanoTime();   //获取开始时间
         pq.push(0L, source);
         vertexInHeap.add(source);
 
@@ -113,5 +111,7 @@ public class Dijkstra {
                 }
             }
         }
+        long endTime = System.nanoTime(); //获取结束时间
+        return endTime - startTime;
     }
 }
