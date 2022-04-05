@@ -1,12 +1,30 @@
 package heap;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
 
+    private int getChildNodeNumber(Node theNode) {
+        int ret = 0;
+        for (Node ptr = theNode.children; ptr != null; ptr = ptr.after) {
+            ret++;
+            ret += getChildNodeNumber(ptr);
+        }
+        return ret;
+    }
+
     public void checkRep() {
         assert (keyToNodeMap.size() == N);
+        int realNodeNum = 0;
+        for (Node ptr = minNode; ptr != null; ptr = ptr.after) {
+            realNodeNum++;
+            realNodeNum += getChildNodeNumber(ptr);
+        }
+        assert (realNodeNum == N);
+        assert minNode.before == null;
+        HashSet<Integer> degrees = new HashSet<>();
     }
 
     private class Node {
@@ -41,21 +59,22 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
         keyToNodeMap = new HashMap<>();
     }
 
+    public V getTop() {
+        return minNode.value;
+    }
+
     @Override
     public void push(K key, V value) {
-        checkRep();
         Node theNode = new Node(key, value);
         assert (!keyToNodeMap.containsKey(key));
         keyToNodeMap.put(key, theNode);
         insertIntoRootList(theNode);
         N++;
-        checkRep();
     }
 
     @Override
     public V pop() {
         assert (minNode != null);
-        checkRep();
 
         Node ret = minNode;
         if (ret != null) {
@@ -63,6 +82,7 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
             Node theNode = minNode.children;
             while (theNode != null) {
                 Node nextNode = theNode.after;
+                removeFromDoubleLinkedList(theNode);
                 insertAfter(minNode, theNode);
                 theNode.parent = null;
                 theNode = nextNode;
@@ -77,7 +97,6 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
             // 3. consolidate
             consolidate();
         }
-        checkRep();
         return ret.value;
     }
 
@@ -85,7 +104,6 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
     public void decreaseKey(K before, K after) {
         assert(before.compareTo(after) > 0);
         assert (!keyToNodeMap.containsKey(after));
-        checkRep();
 
         // 1. update the map
         Node theNode = keyToNodeMap.get(before);
@@ -99,8 +117,11 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
                 cut(theNode, theNode.parent);
                 cascadeCut(parentNode);
             }
+        } else {
+            // The node is within the root list
+            removeFromDoubleLinkedList(theNode);
+            insertIntoRootList(theNode);
         }
-        checkRep();
     }
 
     private void insertBefore(Node position, Node insertedNode) {
@@ -144,6 +165,7 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
 
         while (currentNode != null) {
             Node next = currentNode.after;
+            removeFromDoubleLinkedList(currentNode);
             int degree = currentNode.degree;
             while (degreeToNode.get(degree) != null) {
                 Node other = degreeToNode.get(degree);
@@ -192,7 +214,14 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
         parentNode.degree--;
         if (theNode == parentNode.children) {
             parentNode.children = theNode.after;
+        } else {
+            theNode.parent = null;
+            theNode.before.after = theNode.after;
+            if (theNode.after != null) {
+                theNode.after.before = theNode.before;
+            }
         }
+        removeFromDoubleLinkedList(theNode);
         insertIntoRootList(theNode);
         theNode.mark = false;
     }
@@ -220,6 +249,16 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
             minNode = theNode;
         } else {
             insertAfter(minNode, theNode);
+        }
+    }
+
+    private void removeFromDoubleLinkedList(Node node) {
+        if (node.before != null) {
+            node.before.after = node.after;
+        }
+
+        if (node.after != null) {
+            node.after.before = node.before;
         }
     }
 
