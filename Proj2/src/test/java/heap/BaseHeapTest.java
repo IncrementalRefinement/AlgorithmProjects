@@ -22,9 +22,9 @@ public abstract class BaseHeapTest {
             theHeap.push(i, String.valueOf(i));
         }
 
-//        for (int i = 0; i < count; i++) {
-//            theHeap.decreaseKey(i, i - 1);
-//        }
+        for (int i = 2; i < count; i++) {
+            theHeap.decreaseKey(i, i - 1);
+        }
 
         for (int i = 0; i < count; i++) {
             theHeap.pop();
@@ -48,15 +48,15 @@ public abstract class BaseHeapTest {
     public void decreaseKeyTest() {
         int count = 100;
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 2; i < count; i++) {
             theHeap.push(i, String.valueOf(i));
         }
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 2; i < count; i++) {
             theHeap.decreaseKey(i, i - 1);
         }
 
-        for (int i = 0; i < count; i++) {
+        for (int i = 2; i < count; i++) {
             assertEquals( String.valueOf(i), theHeap.pop());
         }
     }

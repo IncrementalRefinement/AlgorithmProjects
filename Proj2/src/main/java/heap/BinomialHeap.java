@@ -89,7 +89,7 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
             curr3 = curr3.sibling;
         }
 
-        // scan the list and repeatedly merge binomial trees with same degree
+        // scan the list and repeatedly combine binomial trees with same degree
         Node cur = temphead;
         Node prev = temphead;
         Node next = cur.sibling;
@@ -159,7 +159,8 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
         Node minPtr = head;
         Node prevPtr = null;
         K minkey = head.key;
-        // remove the smallest node from the heap
+
+        // find the smallest root from the heap
         while (curr != null) {
             if (curr.key.compareTo(minkey) <= 0) {
                 minkey = curr.key;
@@ -196,22 +197,26 @@ public class BinomialHeap<K extends Comparable<K>, V> implements Heap<K, V> {
         return minPtr.value;
     }
 
+
     @Override
     public void decreaseKey(K before, K after) {
         assert (before.compareTo(after) > 0);
 
-        // 1. update the map
         Node theNode = keyToNodeMap.get(before);
         theNode.key = after;
-
+        //swap the key, value, and pointer with its parent until the node.Key > node.parent.Key.
         while (theNode.parent != null) {
             if (theNode.key.compareTo(theNode.parent.key) < 0) {
                 K tmp = theNode.key;
                 V tmpv = theNode.value;
+                keyToNodeMap.remove(theNode.key);
+                keyToNodeMap.remove(theNode.parent.key);
                 theNode.key = theNode.parent.key;
                 theNode.value = theNode.parent.value;
                 theNode.parent.key = tmp;
                 theNode.parent.value = tmpv;
+                keyToNodeMap.put(theNode.key,theNode);
+                keyToNodeMap.put(theNode.parent.key,theNode.parent);
             } else {
                 break;
             }
