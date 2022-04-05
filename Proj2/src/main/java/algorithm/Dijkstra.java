@@ -41,16 +41,16 @@ public class Dijkstra {
         }
 
         BinaryHeapEvaluate();
-        FibonacciHeapEvaluate();
+//        FibonacciHeapEvaluate();
 
     }
 
     public static void BinaryHeapEvaluate() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinaryHeap.dat"));
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 10; i++) {
             //At least 10 pairs of query
             long implementTime = 0;
-            for (int j = 0; j < 2000; j += 150) {
+            for (int j = 0; j < 4000; j += 1) {
                 implementTime += search(vertexs, vertexs.get(j), new BinaryHeap<Long, Vertex>());
             }
             writer.write(implementTime + " ");
@@ -64,7 +64,7 @@ public class Dijkstra {
         for (int i = 0; i < 100; i++) {
             //At least 10 pairs of query
             long implementTime = 0;
-            for (int j = 0; j < 2000; j += 150) {
+            for (int j = 0; j < 3000; j += 37) {
                 implementTime += search(vertexs, vertexs.get(j), new FibonacciHeap<Long, Vertex>());
             }
             writer.write(implementTime + " ");
@@ -84,7 +84,7 @@ public class Dijkstra {
 
         source.setVertexBefore(null);
         source.setDistanceFromSource(0);
-        long startTime = System.nanoTime();   //获取开始时间
+        long startTime = System.currentTimeMillis();   //获取开始时间
         pq.push(0L, source);
         vertexInHeap.add(source);
 
@@ -111,7 +111,7 @@ public class Dijkstra {
                 }
             }
         }
-        long endTime = System.nanoTime(); //获取结束时间
+        long endTime = System.currentTimeMillis(); //获取结束时间
         return endTime - startTime;
     }
 }
