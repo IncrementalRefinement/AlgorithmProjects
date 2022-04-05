@@ -5,6 +5,10 @@ import java.util.Map;
 
 public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
 
+    public void checkRep() {
+        assert (keyToNodeMap.size() == N);
+    }
+
     private class Node {
 
         public boolean mark;
@@ -39,15 +43,19 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
 
     @Override
     public void push(K key, V value) {
+        checkRep();
         Node theNode = new Node(key, value);
+        assert (!keyToNodeMap.containsKey(key));
         keyToNodeMap.put(key, theNode);
         insertIntoRootList(theNode);
         N++;
+        checkRep();
     }
 
     @Override
     public V pop() {
         assert (minNode != null);
+        checkRep();
 
         Node ret = minNode;
         if (ret != null) {
@@ -69,12 +77,15 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
             // 3. consolidate
             consolidate();
         }
+        checkRep();
         return ret.value;
     }
 
     @Override
     public void decreaseKey(K before, K after) {
         assert(before.compareTo(after) > 0);
+        assert (!keyToNodeMap.containsKey(after));
+        checkRep();
 
         // 1. update the map
         Node theNode = keyToNodeMap.get(before);
@@ -84,10 +95,12 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
 
         if (theNode.parent != null) {
             if (theNode.key.compareTo(theNode.parent.key) < 0) {
+                Node parentNode = theNode.parent;
                 cut(theNode, theNode.parent);
-                cascadeCut(theNode.parent);
+                cascadeCut(parentNode);
             }
         }
+        checkRep();
     }
 
     private void insertBefore(Node position, Node insertedNode) {
@@ -208,5 +221,9 @@ public class FibonacciHeap<K extends Comparable<K>, V> implements Heap<K, V>{
         } else {
             insertAfter(minNode, theNode);
         }
+    }
+
+    public long getN() {
+        return N;
     }
 }

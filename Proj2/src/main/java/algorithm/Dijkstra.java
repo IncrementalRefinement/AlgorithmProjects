@@ -31,7 +31,7 @@ public class Dijkstra {
             int target = sc.nextInt();
             Vertex trg = vertexs.get(target);
             graphneigb.get(source).add(trg);
-            long traveltime = (long) sc.nextDouble();
+            long traveltime = Math.round(sc.nextDouble() * 1000);
             graphdistance.get(source).put(trg, traveltime);
             double spatialDistanceInMeters = sc.nextDouble();// ignore this data.
         }
@@ -40,7 +40,7 @@ public class Dijkstra {
             vertexs.get(i).setNeighbors(graphneigb.get(i));
         }
 
-//        BinaryHeapEvaluate();
+        BinaryHeapEvaluate();
         FibonacciHeapEvaluate();
 
     }
@@ -50,7 +50,7 @@ public class Dijkstra {
         for (int i = 0; i < 1001; i++) {
             //At least 1000 pairs of query
             long startTime = System.currentTimeMillis();   //获取开始时间
-            for (int j = 0; j < 1001; j++) {
+            for (int j = 0; j < 1001; j+=150) {
                 search(vertexs, vertexs.get(j), new BinaryHeap<Long, Vertex>());
             }
             long endTime = System.currentTimeMillis(); //获取结束时间
@@ -65,7 +65,7 @@ public class Dijkstra {
         for (int i = 0; i < 1001; i++) {
             //At least 1000 pairs of query
             long startTime = System.currentTimeMillis();   //获取开始时间
-            for (int j = 0; j < 1001; j++) {
+            for (int j = 0; j < 1001; j+=150) {
                 search(vertexs, vertexs.get(j), new FibonacciHeap<Long, Vertex>());
             }
             long endTime = System.currentTimeMillis(); //获取结束时间
@@ -83,6 +83,9 @@ public class Dijkstra {
         }
 
         Set<Vertex> vertexInHeap = new HashSet<>();
+
+        source.setVertexBefore(null);
+        source.setDistanceFromSource(0);
 
         pq.push(0L, source);
         vertexInHeap.add(source);
@@ -104,8 +107,8 @@ public class Dijkstra {
                     }
                     long alt = theVertex.getDistanceFromSource() + theVertex.getDirectDistance(neighbor);
                     if (alt < neighbor.getDistanceFromSource()) {
-                        neighbor.setDistanceFromSource(alt);
                         pq.decreaseKey(neighbor.getDistanceFromSource(), alt);
+                        neighbor.setDistanceFromSource(alt);
                     }
                 }
             }
