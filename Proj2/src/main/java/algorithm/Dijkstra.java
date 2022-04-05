@@ -1,9 +1,6 @@
 package algorithm;
 
-import heap.BinaryHeap;
-import heap.FibonacciHeap;
-import heap.Heap;
-import heap.Vertex;
+import heap.*;
 
 import java.io.*;
 import java.util.*;
@@ -40,9 +37,21 @@ public class Dijkstra {
             vertexs.get(i).setNeighbors(graphneigb.get(i));
         }
 
-        BinaryHeapEvaluate();
+//        BinaryHeapEvaluate();
 //        FibonacciHeapEvaluate();
+        BinomialHeapEvaluate();
+    }
 
+
+    public static void BinomialHeapEvaluate() throws IOException {
+        BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinomialHeap.dat"));
+        for (int i = 0; i < 10; i++) {
+            //At least 10 pairs of query
+            long implementTime = search(vertexs, vertexs.get(0), new BinomialHeap<Long, Vertex>());
+            writer.write(implementTime + " ");
+            writer.newLine();
+        }
+        writer.close();
     }
 
     public static void BinaryHeapEvaluate() throws IOException {
@@ -84,7 +93,7 @@ public class Dijkstra {
 
         source.setVertexBefore(null);
         source.setDistanceFromSource(0);
-        long startTime = System.currentTimeMillis();   //获取开始时间
+        long startTime = System.nanoTime();   //获取开始时间
         pq.push(0L, source);
         vertexInHeap.add(source);
 
@@ -111,7 +120,7 @@ public class Dijkstra {
                 }
             }
         }
-        long endTime = System.currentTimeMillis(); //获取结束时间
+        long endTime = System.nanoTime(); //获取结束时间
         return endTime - startTime;
     }
 }
