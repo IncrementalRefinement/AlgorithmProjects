@@ -37,48 +37,51 @@ public class Dijkstra {
             vertexs.get(i).setNeighbors(graphneigb.get(i));
         }
 
-//        BinaryHeapEvaluate();
-//        FibonacciHeapEvaluate();
+        BinaryHeapEvaluate();
+        FibonacciHeapEvaluate();
         BinomialHeapEvaluate();
     }
 
 
     public static void BinomialHeapEvaluate() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinomialHeap.dat"));
-        for (int i = 0; i < 10; i++) {
+        long implementTime = 0;
+        for (int i = 0; i < 1000; i++) {
             //At least 10 pairs of query
-            long implementTime = search(vertexs, vertexs.get(0), new BinomialHeap<Long, Vertex>());
-            writer.write(implementTime + " ");
-            writer.newLine();
+            for (int j = 0; j < 2000; j += 150) {
+                implementTime += search(vertexs, vertexs.get(j), new BinomialHeap<Long, Vertex>());
+            }
         }
+        writer.write(implementTime + " ");
+        writer.newLine();
         writer.close();
     }
 
     public static void BinaryHeapEvaluate() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/BinaryHeap.dat"));
-        for (int i = 0; i < 10; i++) {
+        long implementTime = 0;
+        for (int i = 0; i < 1000; i++) {
             //At least 10 pairs of query
-            long implementTime = 0;
-            for (int j = 0; j < 4000; j += 1) {
+            for (int j = 0; j < 2000; j += 150) {
                 implementTime += search(vertexs, vertexs.get(j), new BinaryHeap<Long, Vertex>());
             }
-            writer.write(implementTime + " ");
-            writer.newLine();
         }
+        writer.write(implementTime + " ");
+        writer.newLine();
         writer.close();
     }
 
     public static void FibonacciHeapEvaluate() throws IOException {
         BufferedWriter writer = new BufferedWriter(new FileWriter("src/Results/FibonacciHeap.dat"));
-        for (int i = 0; i < 100; i++) {
+        long implementTime = 0;
+        for (int i = 0; i < 1000; i++) {
             //At least 10 pairs of query
-            long implementTime = 0;
-            for (int j = 0; j < 3000; j += 37) {
+            for (int j = 0; j < 2000; j += 150) {
                 implementTime += search(vertexs, vertexs.get(j), new FibonacciHeap<Long, Vertex>());
             }
-            writer.write(implementTime + " ");
-            writer.newLine();
         }
+        writer.write(implementTime + " ");
+        writer.newLine();
         writer.close();
     }
 
