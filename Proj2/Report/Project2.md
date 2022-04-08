@@ -1,24 +1,16 @@
-# Project 2 Shortest Path Algorithm with Heaps
+# Proj2
 
-- Lin Juyi - 3180103721
-- Lu Tian - 3180103740
+## Architecture of the Project
 
-// TODO
-1. report 直接打印成 pdf，放到根目录里
-2. target 不需要放
-3. 需要改代码里输入输出的文件路径
+We implement this project in Java and use [Maven](https://maven.apache.org/) for project management and building automation. As a result, the project is organized in a "Maven" way. The implementation of all the Heap is inside "/src/main/java/heap/" the Dijkstra and the performance test code is within the class "algorithm.Dijkstra". Also, we adopt the idea of Test Driven Development(TDD), and constructed a set of unit test in "src/test/java" before actual implementation procedure.
 
-## 1. Architecture of the Project
+The test data and the test result is in //TODO. You can also run the main method in "algorithm.Dijkstra", relaunch the test and generate the result if you like.
 
-We implement this project in Java and use [Maven](https://maven.apache.org/) for project management and building automation. As a result, the project is organized in a "Maven" way. The implementation of all the Heap is inside "/src/main/java/heap/" the Dijkstra and the performance test code is within the class "algorithm.Dijkstra". Also, we adopt the idea of Test Driven Development(TDD), and constructed a set of unit test in "src/test/java" before actual development procedure.
-
-The test data is in "/dataset/". And the test result is in "/Results/". You can also run the main method in "algorithm.Dijkstra", relaunch the test and generate the result if you like.
-
-## 2. Introduction of the Fibonacci Heap
+## Introduction of the Fibonacci Heap
 
 Fibonacci heap is a data structure for priority queue operations, consisting of a collection of heap-ordered trees. It has a better amortized running time than many other priority queue data structures including the binary heap and binomial heap. A Fibonacci heap is a collection of trees satisfying the heap property.
 
-// TODO fib_heap_img1.png 把图片插入
+// TODO fib_heap_img1.png
 
 In our implementation, the node of the tree is organized in a doubled linked list. Each node maintains the value, key and the degree of the current node. Also the node also store the pointer to its parent and leftmost child.
 
@@ -174,11 +166,15 @@ private void cascadeCut(Node theNode) {
 }
 ```
 
-## 3. Theoretical Comparison
+## Theoretical Comparison
 
-// TODO 画一张表，四种堆，三种操作
+// PASS
 
-## 4. Theoretical Analysis of the Dijkstra Algorithm
+### Binary Heap
+
+### Fibonacci Heap
+
+## Theoretical Analysis of the Dijkstra Algorithm
 
 Bounds of the running time of Dijkstra's algorithm on a graph with edges **E** and vertices **V** can be expressed as a function of the number of edges **|E|** and the number of vertices **|V|**. The complexity is mainly determined by the data structure that is used to represent the priority queue of the vertex.
 
@@ -188,17 +184,11 @@ $\Theta(|E| * T_{\text{dk}} + |V| * T_{\text{pop}})$
 
 The $T_{\text{dk}}$ and $T_{\text{em}}$ are the complexities of the decrease-key and pop operations of the implementation data structure beneath the priority queue which is already presented in last section.
 
-## 5. Test
+## Test
 
-// TODO
+// pass
 
-说明跑了哪几个州的图，一共四个州 how the graphs are stored
-
-说明测试用的策略: 每个完整的图里面选取N = 7(2000/150)个节点，跑出该节点到所有的可达节点的最短路径。重复10次，取平均
-
-放上测试数据，每一个州不同的节点数画图，横轴是州纵轴是运行时间
-
-## 6. Discussion & Conclusion
+## Discussion & Conclusion
 
 As the test shows, it seems like the fibonacci heap doesn't outperform the binary heap a lot, sometimes even worse than the binomial heap. But why? It is because of the way we implement the Dijkstra algorithm. In our implementation, we don't push all the vertex into the PQ at the beginning. Rather, we only push the node into the PQ as its been visited. As a result, the size of the heap is not that big and the improvement by advanced algorithm is not prominent. On the contrary, the complex operation of the doubled linked list will takes more time than some naive approach. However, if the Dijkstra algorithm makes the heap with large scale at the beginning, the fibonacci heap will show its efficiency of amortized log(1) complexity DECREASE-KEY.
 
@@ -245,6 +235,6 @@ public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> 
 
 The result of the project enlighten us that the more advanced approach might not always be the best approach, we should design and pick up the most suitable approach in practice.
 
-## 7. References
+## References
 
 1. Cormen, Thomas H.; Leiserson, Charles E.; Rivest, Ronald L.; Stein, Clifford (2001). "Section 24.3: Dijkstra's algorithm". Introduction to Algorithms (Second ed.). MIT Press and McGraw–Hill. pp. 595–601. ISBN 0-262-03293-7.
