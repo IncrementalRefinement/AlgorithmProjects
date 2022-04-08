@@ -4,7 +4,7 @@
 
 We implement this project in Java and use [Maven](https://maven.apache.org/) for project management and building automation. As a result, the project is organized in a "Maven" way. The implementation of all the Heap is inside "/src/main/java/heap/" the Dijkstra and the performance test code is within the class "algorithm.Dijkstra". Also, we adopt the idea of Test Driven Development(TDD), and constructed a set of unit test in "src/test/java" before actual implementation procedure.
 
-The test data and the test result is in //TODO. You can also run the main method in "algorithm.Dijkstra" and relaunch the test and generate the result if you like.
+The test data and the test result is in //TODO. You can also run the main method in "algorithm.Dijkstra", relaunch the test and generate the result if you like.
 
 ## Introduction of the Fibonacci Heap
 
@@ -52,7 +52,7 @@ public void push(K key, V value) {
 }
 ```
 
-The pop operation first insert the children of the minNode into the root node list and then remove the minNode. After that the delayed work of consolidating the trees in the root list finally occurs. The consolidate operation aims to make the trees within the root list only have unique degree(the number of children). The consolidate operation makes sure that the root list wouldn't expand too long. Intuitively thinking, if the root list if so long that it is degenerates to a linked list with the pointer to its minimum node, the pop operation will have to iterate through the list to find the minimum node after the pop, which is undesirable.
+The pop operation first insert the children of the minNode into the root node list and then remove the minNode. After that the delayed work of consolidating the trees in the root list finally occurs. The consolidate operation aims to make the trees within the root list only have unique degree(the number of children). The consolidate operation makes sure that the root list wouldn't expand too long. Intuitively thinking, if the root list is so long that it is degenerates to a linked list with the pointer to its minimum node. In that case, he pop operation will have to iterate through the list to find the minimum node after the pop, which is undesirable.
 
 ```java
 @Override
@@ -108,9 +108,9 @@ private void consolidate() {
 }
 ```
 
-The decreaseKey of the heap is not as complicated as the pop operation. We firstly look up the node in the map and then update its key. If the key is less the key of its parent, we cut the node from its parent and insert it into the root node list.
+The decreaseKey operation of the heap is not as complicated as the pop operation. We firstly look up the node in the map and then update its key. If the key is less the key of its parent, we cut the node from its parent and insert it into the root node list.
 
-But wait, what about cascadeCut operation, why would we bother doing that? Why would we cut the parent from the grand parent node if the grand parent node has been marked()?. The answer is that the cascade operation makes sure that the tree would have too much kid and become too flat. Otherwise the flat tree will takes much time to insert all these child of the flat layer of the tree. However, the cascade will cause the root list longer than simple cut. I think it's kind of like a tradeoff between the length of the root node list and the flatness of the tree in root node list.
+But wait, what about cascadeCut operation, why would we bother doing that? Why would we cut the parent from the grand parent node if the grand parent node has been marked?. The answer is that the cascade operation makes sure that the tree would't have too much kid and become too flat in some layer. Otherwise the flat tree will takes much time to insert all these child of the flat layer of the tree if the parent node of the layer is popped. However, the cascade will cause the root list be more longer than simple cut. I think it's kind of like a tradeoff between the length of the root node list and the flatness of the tree in root node list.
 
 ```java
 @Override
@@ -190,7 +190,7 @@ The $T_{\text{dk}}$ and $T_{\text{em}}$ are the complexities of the decrease-key
 
 ## Discussion & Conclusion
 
-As the test shows, it seems like the fibonacci heap doesn't outperform the binary heap a lot, sometimes even worse than the binomial heap. But why? It is because of the way we implement the Dijkstra algorithm. In our implementation, we don't push all the vertex into the PQ at the beginning. Rather, we only push the node into the PQ as its been visited. As a result, the size of the heap is not that big and the improvement of advanced algorithm is not prominent. On the contrary, the complex operation of the doubled linked list will takes more time than some naive approach. But if the Dijkstra algorithm makes the heap with large scale at the beginning, the fibonacci heap will show its efficiency of amortized logN complexity DECREASE-KEY.
+As the test shows, it seems like the fibonacci heap doesn't outperform the binary heap a lot, sometimes even worse than the binomial heap. But why? It is because of the way we implement the Dijkstra algorithm. In our implementation, we don't push all the vertex into the PQ at the beginning. Rather, we only push the node into the PQ as its been visited. As a result, the size of the heap is not that big and the improvement by advanced algorithm is not prominent. On the contrary, the complex operation of the doubled linked list will takes more time than some naive approach. However, if the Dijkstra algorithm makes the heap with large scale at the beginning, the fibonacci heap will show its efficiency of amortized log(1) complexity DECREASE-KEY.
 
 ```java
 public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> pq) {
