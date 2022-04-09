@@ -3,11 +3,6 @@
 - Lin Juyi - 3180103721
 - Lu Tian - 3180103740
 
-// TODO
-1. report 直接打印成 pdf，放到根目录里
-2. target 不需要放
-3. 需要改代码里输入输出的文件路径
-
 ## 1. Architecture of the Project
 
 We implement this project in Java and use [Maven](https://maven.apache.org/) for project management and building automation. As a result, the project is organized in a "Maven" way. The implementation of all the Heap is inside "/src/main/java/heap/" the Dijkstra and the performance test code is within the class "algorithm.Dijkstra". Also, we adopt the idea of Test Driven Development(TDD), and constructed a set of unit test in "src/test/java" before actual development procedure.
@@ -16,9 +11,11 @@ The test data is in "/dataset/". And the test result is in "/Results/". You can 
 
 ## 2. Introduction of the Fibonacci Heap
 
-Fibonacci heap is a data structure for priority queue operations, consisting of a collection of heap-ordered trees. It has a better amortized running time than many other priority queue data structures including the binary heap and binomial heap. A Fibonacci heap is a collection of trees satisfying the heap property.
+Fibonacci heap is a data structure for priority queue operations, consisting of a collection of heap-ordered trees. It has a better amortized running time than many other priority queue data structures including the binary heap and binomial heap. A Fibonacci heap in figure 1 is a collection of trees satisfying the heap property.
 
-// TODO fib_heap_img1.png 把图片插入
+![fib_heap_figure1](\public\fib_heap_img1.png)
+
+figure 1 
 
 In our implementation, the node of the tree is organized in a doubled linked list. Each node maintains the value, key and the degree of the current node. Also the node also store the pointer to its parent and leftmost child.
 
@@ -116,9 +113,9 @@ private void consolidate() {
 }
 ```
 
-The decreaseKey operation of the heap is not as complicated as the pop operation. We firstly look up the node in the map and then update its key. If the key is less the key of its parent, we cut the node from its parent and insert it into the root node list.
+The decreaseKey operation of the heap is not as complicated as the pop operation. We firstly look up the node in the map and then update its key. If the key is less than the key of its parent, we cut the node from its parent and insert it into the root node list.
 
-But wait, what about cascadeCut operation, why would we bother doing that? Why would we cut the parent from the grand parent node if the grand parent node has been marked?. The answer is that the cascade operation makes sure that the tree would't have too much kid and become too flat in some layer. Otherwise the flat tree will takes much time to insert all these child of the flat layer of the tree if the parent node of the layer is popped. However, the cascade will cause the root list be more longer than simple cut. I think it's kind of like a tradeoff between the length of the root node list and the flatness of the tree in root node list.
+In cascadeCut operation, why would we bother doing that? Why would we cut the parent from the grandparent node if the grandparent node has been marked?. The answer is that the cascade operation makes sure that the tree wouldn't have too much kid and become too flat in some layers. Otherwise, the flat tree will take much time to insert all these children of the flat layer of the tree if the parent node of the layer is popped. However, the cascade will cause the root list to be longer than a simple cut. I think it's kind of like a tradeoff between the length of the root node list and the flatness of the tree in the root node list.
 
 ```java
 @Override
@@ -176,7 +173,13 @@ private void cascadeCut(Node theNode) {
 
 ## 3. Theoretical Comparison
 
-// TODO 画一张表，四种堆，三种操作
+| Operations                 | Binary Heap | Fibonacci Heap | Binomial Heap |
+| :------------------------- | :---------- | -------------- | :------------ |
+| Make-Heap                  | O(1)        | Θ(1)           | O(1)          |
+| Insert                     | Θ(logn)     | Θ(1)           | O(logn)       |
+| Maximum (or Minimum)       | Θ(1)        | Θ(1)           | O(logn)       |
+| Delete Max (or Delete Min) | Θ(logn)     | O(log n)       | Θ(logn)       |
+| Merge (Union)              | Θ(n)        | Θ(1)           | O(logn)       |
 
 ## 4. Theoretical Analysis of the Dijkstra Algorithm
 
@@ -184,23 +187,66 @@ Bounds of the running time of Dijkstra's algorithm on a graph with edges **E** a
 
 For any data structure, the running time is[1]:
 
-$\Theta(|E| * T_{\text{dk}} + |V| * T_{\text{pop}})$
-
-The $T_{\text{dk}}$ and $T_{\text{em}}$ are the complexities of the decrease-key and pop operations of the implementation data structure beneath the priority queue which is already presented in last section.
+$$
+\Theta(|E| * T_{\text{dk}} + |V| * T_{\text{pop}})
+$$
+The dk and pop are the complexities of the decrease-key and pop operations of the implementation data structure beneath the priority queue which is already presented in the last section.
 
 ## 5. Test
 
-// TODO
+the download links of these test data sets:
 
-说明跑了哪几个州的图，一共四个州 how the graphs are stored
+http://www.dis.uniroma1.it/challenge9/download.shtml
 
-说明测试用的策略: 每个完整的图里面选取N = 7(2000/150)个节点，跑出该节点到所有的可达节点的最短路径。重复10次，取平均
+We download 4 states: CO ,DC,DE and TX.
 
-放上测试数据，每一个州不同的节点数画图，横轴是州纵轴是运行时间
+| state | nodes   | edges   |
+| ----- | ------- | ------- |
+| CO    | 448253  | 539295  |
+| DC    | 9559    | 14909   |
+| DE    | 49109   | 60512   |
+| TX    | 2073870 | 2584159 |
+
+The format of the uncompressed file is following. It is a whitespace-separated list of numbers:
+
+- Number of nodes
+- Number of edges
+- For each edge:
+   id of the source node
+   id of the target node
+   travel time
+   spatial distance in meters
+
+Test strategy: For each graph, N = 10 nodes are selected and the shortest path from that node to all reachable nodes. Repeat 10 times and take the average.
+
+| graph | implements                | running times     |
+| ----- | ------------------------- | ----------------- |
+| DC    | binary Fibonacci binomial | 7.4 12.4  3.9     |
+| DE    | binary Fibonacci binomial | 78.2 65.5 47.5    |
+| CO    | binary Fibonacci binomial | 327.5 376.4 166.3 |
+| TX    | binary Fibonacci binomial | 468.9 437 308.9   |
+
+We can find that the Fibonacci heap doesn't perform better than other heaps in our experiments. The binomial heap has the best performance of the three heaps.
+
+Binary Heap
+
+![binary](\public\binary.png)
+
+Fibonacci Heap
+
+![fibonacci](\public\fibonacci.png)
+
+Binomial Heap
+
+![binomial](\public\binomial.png)
+
+Actually, other's experiments shows that Fibonacci heaps only outperformed binary heaps when the graph was incredibly large and dense. In 10000 vertices, 20000000 edges(much intense than our datasset) graph, Fibonacci heap has 11%  speed up[2]. The constant term of the Fibonacci heap time complexity is very large, and the implementation is too complicated. Thus, it does not perform well in most sparse graphs.
 
 ## 6. Discussion & Conclusion
 
-As the test shows, it seems like the fibonacci heap doesn't outperform the binary heap a lot, sometimes even worse than the binomial heap. But why? It is because of the way we implement the Dijkstra algorithm. In our implementation, we don't push all the vertex into the PQ at the beginning. Rather, we only push the node into the PQ as its been visited. As a result, the size of the heap is not that big and the improvement by advanced algorithm is not prominent. On the contrary, the complex operation of the doubled linked list will takes more time than some naive approach. However, if the Dijkstra algorithm makes the heap with large scale at the beginning, the fibonacci heap will show its efficiency of amortized log(1) complexity DECREASE-KEY.
+As the test shows, it seems like the fibonacci heap doesn't outperform the binary heap a lot, sometimes even worse than the binomial heap. But why? It is because of the way we implement the Dijkstra algorithm. 
+
+In our implementation, we don't push all the vertex into the PQ at the beginning. Rather, we only push the node into the PQ as its been visited. As a result, the size of the heap is not that big and the improvement by advanced algorithm is not prominent. On the contrary, the complex operation of the doubled linked list will takes more time than some naive approach. However, if the Dijkstra algorithm makes the heap with large scale at the beginning, the fibonacci heap will show its efficiency of amortized log(1) complexity DECREASE-KEY.
 
 ```java
 public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> pq) {
@@ -245,6 +291,10 @@ public static void search(List<Vertex> graph, Vertex source, Heap<Long, Vertex> 
 
 The result of the project enlighten us that the more advanced approach might not always be the best approach, we should design and pick up the most suitable approach in practice.
 
+
+
 ## 7. References
 
 1. Cormen, Thomas H.; Leiserson, Charles E.; Rivest, Ronald L.; Stein, Clifford (2001). "Section 24.3: Dijkstra's algorithm". Introduction to Algorithms (Second ed.). MIT Press and McGraw–Hill. pp. 595–601. ISBN 0-262-03293-7.
+1. https://stackoverflow.com/questions/504823/has-anyone-actually-implemented-a-fibonacci-heap-efficiently
+

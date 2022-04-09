@@ -22,10 +22,6 @@ binary heap
 
 skew heap 
 
-
-
-
-
 二项式堆  上课讲了
 
 斐波那契堆  上课没讲
@@ -41,7 +37,6 @@ skew heap
 a: 写 heap 接口,  斐波那契堆, binary heap. Dijkstra 算法
 
  b: skew heap, 二项式堆 . 下载数据集， 转化为vertex， 进行测试
-。
 各自写单元测试. 性能测试. 
 
  
