@@ -41,6 +41,12 @@ In our input file, we do not guarantee that such a solution is unique.
 
 ## 3. Theoretical Analysis
 
+列出所有子集, 测试是否独立, 是 O( p(vertexNum) 2^vertexNum)  , where p(vertexNum) is some polynomial.
+
+论文提出了O(2^ (vertexNum/3)) 复杂度. 
+
+
+
 
 
 ## 4. Experiment
