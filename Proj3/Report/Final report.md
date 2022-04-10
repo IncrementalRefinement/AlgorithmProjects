@@ -2,6 +2,7 @@
 
 - Lin Juyi - 3180103721
 - Lu Tian - 3180103740
+- Gu Yu - 3190105872
 
 ## 1. Description of the problem.
 
