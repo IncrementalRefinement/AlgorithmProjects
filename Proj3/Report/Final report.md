@@ -36,9 +36,30 @@ In our input file, we do not guarantee that such a solution is unique.
 
 就可以通过求其补图中最大团中顶点数量,就可得出原图中最大独立集中顶点数量了.
 
-`1
+伪代码
 
-
+```python
+dfs(int 当前节点, int 当前最大团大小,):
+    for i 从当前节点u到最后:
+        if 后面最大+ 当前pos < 现有答案:
+            return
+       	if u和i连通:
+            查询是否团中每个节点都和i联通
+        if 全部联通:
+            当前最大团中加入i.
+            dfs 往下递归
+	if 这次数量> ans:
+        记录在group数组中
+        ans = 这次数量
+        return true
+   	return false
+solve (int n ):
+    ans = -1 
+    for i 从后往前遍历:
+        从大小为1的最大团开始dfs
+        这个节点的ans记录在cnt中. 
+    如果ans 大就返回
+```
 
 ## 3. Theoretical Analysis
 
