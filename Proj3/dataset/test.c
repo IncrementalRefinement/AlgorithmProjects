@@ -19,7 +19,7 @@ int main(void)
     int num1[i],num2[i];
     struct tip tips[i];
     struct fruitprice price[M];
-	if((fp=fopen("C:\\Users\\27746\\Desktop\\c\\data.txt","a"))==NULL)
+	if((fp=fopen(".\\Data\\1000.txt","w"))==NULL)
 	{
 	printf("can not open the file\n");
 	exit(0);
