@@ -5,7 +5,6 @@ const int maxn = 1005;
 int idToIndex[maxn], indexToId[maxn];
 int vertexNum, best = -1, Maxcost;
 int G[maxn][maxn], cnt[maxn], group[maxn], vis[maxn], prices[maxn];
-
 // vis 当前最大团是哪些点
 // ans 当前团size
 //group 保存了答案中最大团的点
@@ -46,9 +45,8 @@ void maxclique() {
 }
 
 int main() {
-#ifdef MyTest
-    freopen("Sakura.txt", "r", stdin);
-#endif
+    auto pt = freopen(R"(..\dataset\Data\100.txt)", "r", stdin);
+    assert(pt != NULL);
     int edgeNum;// 当前最大团大小为1
     scanf("%d %d", &edgeNum, &vertexNum);
     memset(G, 1, sizeof(G));
