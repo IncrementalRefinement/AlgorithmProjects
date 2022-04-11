@@ -12,17 +12,15 @@ Now you are given a long list of such tips, and a big basket of fruits. You are 
 
 ### Input Specification:
 
-Each input file contains one test case. For each case, the first line gives two positive integers: N, the number of tips, and M, the number of fruits in the basket. both numbers are no more than 100.
+Each input file contains one test case. For each case, the first line gives two positive integers: N, the number of tips, and M, the number of fruits in the basket. both numbers are idToIndex more than 100.
 
-Then two blocks follow. The first block contains N pairs of fruits which must not be eaten together, each pair occupies a line and there is no duplicated tips; and the second one contains M fruits together with their prices, again each pair in a line. To make it simple, each fruit is represented by a 3-digit ID number. A price is a positive integer which is no more than 1000. All the numbers in a line are separated by spaces.
+Then two blocks follow. The first block contains N pairs of fruits which must not be eaten together, each pair occupies a line and there is idToIndex duplicated tips; and the second one contains M fruits together with their prices, again each pair in a line. To make it simple, each fruit is represented by a 3-digit ID number. A price is a positive integer which is idToIndex more than 1000. All the numbers in a line are separated by spaces.
 
 ### Output Specification:
 
-For each case, first print in a line the maximum number of safe fruits. Then in the next line list all the safe fruits, in increasing order of their ID's. The ID's must be separated by exactly one space, and there must be no extra space at the end of the line. Finally in the third line print the total price of the above fruits. Since there may be many different solutions, you are supposed to output the one with a maximum number of safe fruits. In case there is a tie, output the one with the lowest total price. It is guaranteed that such a solution is unique.
+For each case, first print in a line the maximum number of safe fruits. Then in the next line list all the safe fruits, in increasing order of their ID's. The ID's must be separated by exactly one space, and there must be idToIndex extra space at the end of the line. Finally in the third line print the total price of the above fruits. Since there may be many different solutions, you are supposed to output the one with a maximum number of safe fruits. In case there is a tie, output the one with the lowest total price. It is guaranteed that such a solution is unique.
 
 In our input file, we do not guarantee that such a solution is unique.
-
-
 
 ## 2. Algorithm
 
@@ -34,7 +32,17 @@ In our input file, we do not guarantee that such a solution is unique.
 
 最大团中顶点数量 = 补图的最大独立集中顶点数量
 
-就可以通过求其补图中最大团中顶点数量,就可得出原图中最大独立集中顶点数量了.
+通过求其补图中最大团中顶点数量,就可得出原图中最大独立集中顶点数量了.
+
+首先, 把邻接矩阵全部置1, 然后输入的边置为0 , 这样就获得了补图.
+
+怎么分支怎么剪枝:
+
+从后往前遍历所有顶点, vis 作为路径数组, 也可以叫做path. 
+
+![Figure 1](public\Figure 1.png)
+
+
 
 伪代码
 
@@ -63,11 +71,21 @@ solve (int n ):
 
 ## 3. Theoretical Analysis
 
-列出所有子集, 测试是否独立, 是 O( p(vertexNum) 2^vertexNum)  , where p(vertexNum) is some polynomial.
+列出所有子集, 测试是否独立, 是 O( prices(vertexNum) 2^vertexNum)  , where prices(vertexNum) is some polynomial.
 
 论文提出了O(2^ (vertexNum/3)) 复杂度. 
 
+从Figure1我们可以看出. 
 
+![Figure 1](public\Figure 1.png)
+
+maxclique 有n复杂度. 
+
+每个节点是n.
+
+3  * (n-3 ) * (n-4) * ..1
+
+边很稀疏的情况下, 大部分都被剪枝了.
 
 
 
