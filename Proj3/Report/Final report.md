@@ -87,19 +87,25 @@ maxclique 有n复杂度.
 
 边很稀疏的情况下, 大部分都被剪枝了.
 
-
-
-## 4. Experiment
-
 Bounds of the running time of our algorithm on a graph with node can be expressed as a function of xxx
 
  the running time is[1]:
+
+
 $$
 \Theta(|E| * T_{\text{dk}} + |V| * T_{\text{pop}})
 $$
 
 
+
+## 4. Experiment
+
+
 ## 5. Discussion and Conclusion
+
+
+
+
 
 
 

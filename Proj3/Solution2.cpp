@@ -45,7 +45,7 @@ void maxclique() {
 }
 
 int main() {
-    auto pt = freopen(R"(..\dataset\Data\200.txt)", "r", stdin);
+    auto pt = freopen(R"(..\dataset\Data\20.txt)", "r", stdin);
     assert(pt != NULL);
     int edgeNum;// 当前最大团大小为1
     scanf("%d %d", &edgeNum, &vertexNum);
