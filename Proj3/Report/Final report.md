@@ -24,91 +24,189 @@ In our input file, we do not guarantee that such a solution is unique.
 
 ## 2. Algorithm
 
-要求所有两两不相连的最大水果集, 就是最大独立集,    我们要求最大独立集,  顶点集V中取 K个顶点，其两两间无连接。
+The maximum independent set is the set of all fruits that are not connected to each other. We require the maximum independent set to be the set of vertices V with K vertices that are not connected to each other.
 
-图G的补图，通俗的来讲就是完全图Kn去除G的边集后得到的图Kn-G.  是一个图有着跟*G*相同的点，而且这些点之间有边相连[当且仅当](https://baike.baidu.com/item/当且仅当/7689242)在*G*里面他们没有边相连。
+The complement of a graph G, in layman's terms, is the graph Kn-G obtained by removing the set of edges of G from the complete graph Kn. It is a graph with the same points as *G*, and these points are connected by edges when and only when *G* they are not connected by edges.
 
-最大团：　顶点集V中取 K个顶点，其两两间有边连接。
+Maximal cluster: The set V of vertices takes K vertices which are connected by edges between two of them.
 
-最大团中顶点数量 = 补图的最大独立集中顶点数量
+The number of vertices in the maximal cluster = the number of vertices in the maximal independent set of the complementary graph
 
-通过求其补图中最大团中顶点数量,就可得出原图中最大独立集中顶点数量了.
+By finding the maximum number of vertices in the maximal cluster of the complementary graph, we can obtain the maximum number of vertices in the original graph.
 
-首先, 把邻接矩阵全部置1, 然后输入的边置为0 , 这样就获得了补图.
+First, set all the adjacency matrices to 1, and then set the input edges to 0, so that the complementary graph is obtained.
 
-怎么分支怎么剪枝:
+How to branch and how to prune:
 
-从后往前遍历所有顶点, vis 作为路径数组, 也可以叫做path. 
+Iterate through all vertices from back to front, vis as an array of paths, also called path. 
+
+if all nodes in current cluster connected with current node, then we continue dfs.
+
+Else, we prune this path. 
 
 ![Figure 1](public\Figure 1.png)
 
-
-
-伪代码
+### pseudo-code
 
 ```python
-dfs(int 当前节点, int 当前最大团大小,):
-    for i 从当前节点u到最后:
-        if 后面最大+ 当前pos < 现有答案:
+dfs(int current node, int current maximum cluster size,):
+    for i from the current node u to the end:
+        if latter max + current pos < existing answer:
             return
-       	if u和i连通:
-            查询是否团中每个节点都和i联通
-        if 全部联通:
-            当前最大团中加入i.
-            dfs 往下递归
-	if 这次数量> ans:
-        记录在group数组中
-        ans = 这次数量
+       	if u and i are connected:
+            Query if every node in the cluster is connected to i
+        if all are connected:
+            Add i to the current max group.
+            dfs recursively down
+	if this time number > ans:
+        Record in the group array
+        ans = number this time
         return true
    	return false
 solve (int n ):
     ans = -1 
-    for i 从后往前遍历:
-        从大小为1的最大团开始dfs
-        这个节点的ans记录在cnt中. 
-    如果ans 大就返回
+    for i in range(back,front):
+        Start dfs with the largest cluster of size 1 
+        The ans of this node is recorded in cnt. 
+    If ans is large, return
 ```
 
 ## 3. Theoretical Analysis
 
-列出所有子集, 测试是否独立, 是 O( prices(vertexNum) 2^vertexNum)  , where prices(vertexNum) is some polynomial.
+Bounds of the running time of our algorithm on a graph with node can be expressed as a function of node
 
-论文提出了O(2^ (vertexNum/3)) 复杂度. 
-
-从Figure1我们可以看出. 
+From figure 1 we can find:
 
 ![Figure 1](public\Figure 1.png)
 
-maxclique 有n复杂度. 
+The tree root 1:
 
-每个节点是n.
+f(n) = f(1)+ f(2) +... + f(n-1)   =>  f(n) = 2 f(n-1) 
 
-3  * (n-3 ) * (n-4) * ..1
+The size of tree n :
 
-边很稀疏的情况下, 大部分都被剪枝了.
+2^n 
 
-Bounds of the running time of our algorithm on a graph with node can be expressed as a function of xxx
+The size of total algorithm:
 
- the running time is[1]:
+2^(n-1) + 2^(n-2) + .. + 2  +1 =2^n
 
+Thus, running time is  O(2^n)
 
-$$
-\Theta(|E| * T_{\text{dk}} + |V| * T_{\text{pop}})
-$$
-
-
+In the case of very sparse edges, most of the branches were cut. Thus, our algorithm don't perform well in  graph which has more edges.
 
 ## 4. Experiment
 
+#### testing data
+
+When the test data is randomly generated, it is stored in structure array first, and then the structure array is arranged from small to large by bubble sort, and then written into the file and saved
+
+1. Enter relation number m and fruit number n
+2. Read m group relation, if the newly generated relation already exists (here using a while loop, when the new relation is not repeated break, otherwise infinite loop), then regenerate and save into the array
+3. Sort according to the number size of the first fruit in the relational structure
+4. Read the rearranged structure array into the created file
+5. Read n random numbers not more than 1000 and save them in the file in descending order
+6. Perform data tests with the data in the file
+
+We also generate sparse graph, #edges = sqrt(# vertex )
+
+The setting of experiment:
+
+```cpp
+auto start = system_clock::now();
+    maxclique();
+    auto end   = system_clock::now();
+    auto duration = duration_cast<microseconds>(end - start);
+then we record 
+    double(duration.count()) *microseconds::period::num
+  microseconds::period::num = 10^6
+```
+
+| node num | running time |
+| -------- | ------------ |
+| 20       | 72.7         |
+| 30       | 3947.778     |
+| 40       | 147418       |
+| 50       | 4313020      |
+| 60       | 1.46E+08     |
+
+We can find that the graphs which vertex number equals edges number running time is growing exponentially.
+
+Twenty nodes were run 10 times and averaged, 30 and 40 nodes were run 9 times and averaged, 50 nodes were run 4 times and averaged, and 60 nodes were run once.
+
+![runningtime](\public\runningtime.png)
+
+We also implement our experiment in the sparse graphs.
+
+| node num | running time |
+| -------- | ------------ |
+| 20       | 79.42857     |
+| 30       | 802.8333     |
+| 40       | 724.75       |
+| 50       | 15921.5      |
+| 60       | 79528.5      |
+| 70       | 349416       |
+| 100      | 5.18E+06     |
+
+![sparse graph running time](\public\sparse graph running time.png)
+
+We can find running time in the 100 nodes graph is smaller than the exponential line, our prune algorithm has an obvious effect.![different pattern graph comparsion](\public\different pattern graph comparsion.png)
+
+We can find that our algorithm has much better performance in sparse time. It proves that prune algorithm is useful.
+
+Bonus:
+
+We compare with another algorithm. It use a different prune strategy. 
+
+```c++
+        if (step + vertexNum - k < best)//new prune strategy 
+            return;
+        if (step + dp[k] < best)
+            return;
+       // don't have maxcost prune in first algorithm
+```
+
+![Two algorithm in dense graph](\public\Two algorithm in dense graph.png)
+
+In dense graph, the running time is following:
+
+| node num | algorithm1 | algorithm2 |
+| -------- | ---------- | ---------- |
+| 20       | 72.7       | 84         |
+| 30       | 3947.78    | 4700       |
+| 40       | 147418     | 129079     |
+| 50       | 4313020    | 3.68E+06   |
+| 60       | 1.5E+08    | 1.34E+08   |
+
+In 40, 50 and 60 vertexes graph, new algorithm is quicker than the first algorithm. In 20,30 vertexes graph, new algorithm is slower than the first algorithm. It is because new algorithm has bigger constant items.
+
+In sparse graph, the running time is following:
+
+| node num | algorithm1 | algorithm2 |
+| -------- | ---------- | ---------- |
+| 20       | 79.4286    | 110        |
+| 30       | 802        | 950        |
+| 40       | 724        | 828        |
+| 50       | 15921      | 23683      |
+| 60       | 79528      | 53904      |
+| 70       | 349416     | 836378     |
+| 100      | 5180765    | 5.36E+06   |
+
+In all input sizes, the new algorithm is slower than the first algorithm.
+
+The new prune strategy doesn't have an obvious effect on Sparse graphs because it doesn't have many edges. But in dense graphs, it works well.
 
 ## 5. Discussion and Conclusion
 
+In the case of very sparse edges, most of the branches were cut. Thus, our algorithm doesn't perform well in intense graphs.
 
+The exponential level of growth is very significant, especially when there are many edges.
 
+We can find that our algorithm has much better performance in sparse time. It proves that prune algorithm is useful.
 
-
-
+We should test the data more often, and also compare it in more cases. 
 
 ## 6. References
 
 1.http://i.stanford.edu/pub/cstr/reports/cs/tr/76/550/CS-TR-76-550.pdf
+
