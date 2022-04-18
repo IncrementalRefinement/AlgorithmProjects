@@ -24,9 +24,9 @@ int main() {
         theFrequencies.push_back(theFrequency);
     }
 
-    int checkTime;
-    cin >> checkTime;
-    for (int i = 0; i < checkTime; i++) {
+    int checkTimes;
+    cin >> checkTimes;
+    for (int i = 0; i < checkTimes; i++) {
         unordered_map<char, string> codeToCheck;
         for (int j = 0; j < N; j++) {
             char theChar;
@@ -40,7 +40,7 @@ int main() {
         } else {
             cout << "No";
         }
-        if (i < checkTime - 1) {
+        if (i < checkTimes - 1) {
             cout << endl;
         }
     }
