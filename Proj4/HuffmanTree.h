@@ -8,6 +8,7 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 using namespace std;
 
@@ -34,11 +35,6 @@ public:
         this->left = nullptr;
         this->right = nullptr;
         this->theChar = theChar;
-    }
-
-    ~HuffmanTree() {
-        delete this->left;
-        delete this->right;
     }
 
     HuffmanTree* merge(HuffmanTree* otherTree);

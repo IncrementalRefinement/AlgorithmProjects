@@ -103,11 +103,16 @@ bool isCodeLegal(unordered_map<char, string> codeToCheck, vector<char> theChars,
     queue2.pop();
     assert(queue2.empty());
     // 4. check if the code length is optimal
-    for (auto kv : theOptimalTree->getHuffmanCode()) {
+    unordered_map<char, string> optimalCode = theOptimalTree->getHuffmanCode();
+    for (auto kv : optimalCode) {
         if (codeToCheck[kv.first].size() != kv.second.size()) {
+            delete &optimalCode;
+            delete theOptimalTree;
             return false;
         }
     }
+    delete &optimalCode;
+    delete theOptimalTree;
     return true;
 }
 
