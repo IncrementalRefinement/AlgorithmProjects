@@ -2,11 +2,56 @@
 // Created by Xander on 2022/4/18.
 //
 
+#ifndef PROJ4_HUFFMANTREE_H
+#define PROJ4_HUFFMANTREE_H
+
+#include <string>
+#include <unordered_map>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
+const char INVALID_CHAR = -1;
+
+class HuffmanTree {
+
+public:
+    char theChar;
+    unsigned long weight;
+    HuffmanTree *left;
+    HuffmanTree *right;
+
+public:
+    explicit HuffmanTree(unsigned long theWeight) {
+        this->weight = theWeight;
+        this->left = nullptr;
+        this->right = nullptr;
+        this->theChar = INVALID_CHAR;
+    }
+
+    HuffmanTree(unsigned long theWeight, char theChar) {
+        this->weight = theWeight;
+        this->left = nullptr;
+        this->right = nullptr;
+        this->theChar = theChar;
+    }
+
+    HuffmanTree* merge(HuffmanTree* otherTree);
+    unsigned long getTreeWeight();
+    unordered_map<char, string> getHuffmanCode();
+};
+
+bool isCodeLegal(unordered_map<char, string> codeToCheck, vector<char> theChars, vector<unsigned long> theFrequencies);
+
+#endif //PROJ4_HUFFMANTREE_H
+
+
 #include <cassert>
 #include <algorithm>
 #include <queue>
 
-#include "HuffmanTree.h"
+
 
 typedef struct BinaryTreeNode {
     BinaryTreeNode *left;
@@ -149,5 +194,46 @@ void insertIntoTree(const string& theCode, BinaryTreeNode *root) {
             ptr = ptr->right;
         }
         index++;
+    }
+}
+
+using namespace std;
+
+int main() {
+    int N;
+    cin >> N;
+    vector<char> theChars;
+    theChars.reserve(N);
+    vector<unsigned long> theFrequencies;
+    theFrequencies.reserve(N);
+
+    for (int i = 0; i < N; i++) {
+        char theChar;
+        unsigned long theFrequency;
+        cin >> theChar;
+        cin >> theFrequency;
+        theChars.push_back(theChar);
+        theFrequencies.push_back(theFrequency);
+    }
+
+    int checkTimes;
+    cin >> checkTimes;
+    for (int i = 0; i < checkTimes; i++) {
+        unordered_map<char, string> codeToCheck;
+        for (int j = 0; j < N; j++) {
+            char theChar;
+            string theCode;
+            cin >> theChar;
+            cin >> theCode;
+            codeToCheck[theChar] = theCode;
+        }
+        if (isCodeLegal(codeToCheck, theChars, theFrequencies)) {
+            cout << "Yes";
+        } else {
+            cout << "No";
+        }
+        if (i < checkTimes - 1) {
+            cout << endl;
+        }
     }
 }
