@@ -8,13 +8,21 @@
 
 #include "HuffmanTree.h"
 
-void dfs(HuffmanTree *currentNode, unordered_map<char, string> *huffmanCode, string theCode);
-bool isPrefixCode(unordered_map<char, string> codeToCheck);
-
 typedef struct BinaryTreeNode {
     BinaryTreeNode *left;
     BinaryTreeNode *right;
+
+public:
+    BinaryTreeNode() {
+        this->left = nullptr;
+        this->right = nullptr;
+    }
 } BinaryTreeNode;
+
+void dfs(HuffmanTree *currentNode, unordered_map<char, string> *huffmanCode, const string& theCode);
+bool isPrefixCode(const unordered_map<char, string>& codeToCheck);
+bool conflictWithPrefixTree(const string& theCode, BinaryTreeNode *root);
+void insertIntoTree(const string& theCode, BinaryTreeNode *root);
 
 HuffmanTree *HuffmanTree::merge(HuffmanTree *otherTree) {
     HuffmanTree *newTree = new HuffmanTree(this->getTreeWeight() + otherTree->getTreeWeight());
@@ -104,19 +112,21 @@ bool isCodeLegal(unordered_map<char, string> codeToCheck, vector<char> theChars,
     assert(queue2.empty());
     // 4. check if the code length is optimal
     unordered_map<char, string> optimalCode = theOptimalTree->getHuffmanCode();
-    for (auto kv : optimalCode) {
-        if (codeToCheck[kv.first].size() != kv.second.size()) {
-            delete &optimalCode;
-            delete theOptimalTree;
-            return false;
-        }
+    unsigned long optimalLength = 0;
+    unsigned long actualLength = 0;
+    for (int i = 0; i < theChars.size(); i++) {
+        char theChar = theChars[i];
+        unsigned long frequency = theFrequencies[i];
+        optimalLength += optimalCode[theChar].length() * frequency;
+        actualLength += codeToCheck[theChar].length() * frequency;
     }
     delete &optimalCode;
     delete theOptimalTree;
-    return true;
+    assert(actualLength <= optimalLength);
+    return optimalLength == actualLength;
 }
 
-void dfs(HuffmanTree *currentNode, unordered_map<char, string> *huffmanCode, string theCode) {
+void dfs(HuffmanTree *currentNode, unordered_map<char, string> *huffmanCode, const string& theCode) {
     if (currentNode == nullptr) return;
     if (currentNode->left == nullptr && currentNode -> right == nullptr) {
         (*huffmanCode)[currentNode->theChar] = theCode;
@@ -126,7 +136,53 @@ void dfs(HuffmanTree *currentNode, unordered_map<char, string> *huffmanCode, str
     dfs(currentNode->right, huffmanCode, theCode + "1");
 }
 
-bool isPrefixCode(unordered_map<char, string> codeToCheck) {
-    // TODO
+bool isPrefixCode(const unordered_map<char, string>& codeToCheck) {
+    BinaryTreeNode *root = new BinaryTreeNode();
+    // 1. construct the binary tree
+    for (const auto& kv : codeToCheck) {
+        insertIntoTree(kv.second, root);
+    }
+    // 2. check if conflict
+    for (const auto& kv : codeToCheck) {
+        if (conflictWithPrefixTree(kv.second, root)) {
+            delete root;
+            return false;
+        }
+    }
+    delete root;
     return true;
+}
+
+bool conflictWithPrefixTree(const string& theCode, BinaryTreeNode *root) {
+    BinaryTreeNode *ptr = root;
+    int index = 0;
+    while(index < theCode.size()) {
+        if (theCode[index] == '0') {
+            ptr = ptr->left;
+        } else {
+            ptr = ptr->right;
+        }
+        index++;
+    }
+    if (ptr->left == nullptr && ptr->right == nullptr) return false;
+    return true;
+}
+
+void insertIntoTree(const string& theCode, BinaryTreeNode *root) {
+    BinaryTreeNode *ptr = root;
+    int index = 0;
+    while(index < theCode.size()) {
+        if (theCode[index] == '0') {
+            if (ptr->left == nullptr) {
+                ptr->left = new BinaryTreeNode();
+            }
+            ptr = ptr->left;
+        } else {
+            if (ptr->right == nullptr) {
+                ptr->right = new BinaryTreeNode();
+            }
+            ptr = ptr->right;
+        }
+        index++;
+    }
 }
