@@ -36,12 +36,9 @@ int main() {
             codeToCheck[theChar] = theCode;
         }
         if (isCodeLegal(codeToCheck, theChars, theFrequencies)) {
-            cout << "Yes";
+            cout << "Yes" << endl;
         } else {
-            cout << "No";
-        }
-        if (i < checkTimes - 1) {
-            cout << endl;
+            cout << "No" << endl;
         }
     }
 }

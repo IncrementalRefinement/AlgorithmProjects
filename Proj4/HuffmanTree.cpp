@@ -5,6 +5,7 @@
 #include <cassert>
 #include <algorithm>
 #include <queue>
+#include <unordered_set>
 
 #include "HuffmanTree.h"
 
@@ -52,6 +53,15 @@ bool isCodeLegal(unordered_map<char, string> codeToCheck, vector<char> theChars,
     assert(theChars.size() == theFrequencies.size());
 
     // 1. check if the code is legal prefix code
+    unordered_set<string> codes;
+    for (auto kv : codeToCheck) {
+        if (codes.find(kv.second) != codes.end()) {
+            return false;
+        } else {
+            codes.insert(kv.second);
+        }
+    }
+
     if (!isPrefixCode(codeToCheck)) {
         return false;
     }
