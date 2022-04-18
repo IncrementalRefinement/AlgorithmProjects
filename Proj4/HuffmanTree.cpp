@@ -130,7 +130,7 @@ bool isPrefixCode(const unordered_map<char, string>& codeToCheck) {
 
 bool conflictWithPrefixTree(const string& theCode, BinaryTreeNode *root) {
     BinaryTreeNode *ptr = root;
-    int index = 0;
+    unsigned int index = 0;
     while(index < theCode.size()) {
         if (theCode[index] == '0') {
             ptr = ptr->left;
@@ -145,7 +145,7 @@ bool conflictWithPrefixTree(const string& theCode, BinaryTreeNode *root) {
 
 void insertIntoTree(const string& theCode, BinaryTreeNode *root) {
     BinaryTreeNode *ptr = root;
-    int index = 0;
+    unsigned int index = 0;
     while(index < theCode.size()) {
         if (theCode[index] == '0') {
             if (ptr->left == nullptr) {
