@@ -15,7 +15,7 @@ const char INVALID_CHAR = -1;
 
 class HuffmanTree {
 
-private:
+public:
     char theChar;
     unsigned long weight;
     HuffmanTree *left;
