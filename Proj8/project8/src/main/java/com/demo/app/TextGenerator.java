@@ -17,7 +17,7 @@ public class TextGenerator {
 
     private static final String[] WORD_POOL = THE_TEXT.toLowerCase().split("\\s+");
 
-    private static final long DEFAULT_TEXT_LENGTH = 700000;
+    private static final long DEFAULT_TEXT_LENGTH = 50000000;
 
     private static final String TXT_FILE_NAME = "input.txt";
 
