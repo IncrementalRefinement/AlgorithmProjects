@@ -16,7 +16,7 @@ public class NaiveWordCount {
     public static void main(String[] args) throws Exception {
         Date beginTime = new java.util.Date();
 
-        File inputFile = new File(args[0]);
+        File inputFile = new File("input.txt");
 //        BufferedReader br = new BufferedReader(new FileReader(inputFile));
         Map<String, Long> wordCountMap = new HashMap<>();
 
@@ -28,7 +28,7 @@ public class NaiveWordCount {
             String word = fileReader.next();
             Long count = wordCountMap.get(word);
             if (count == null) {
-                wordCountMap.put(word, 0L);
+                wordCountMap.put(word, 1L);
             } else {
                 wordCountMap.put(word, count + 1);
             }
@@ -41,7 +41,7 @@ public class NaiveWordCount {
             sb.append(entry.getKey()).append(": ").append(entry.getValue()).append('\n');
         }
 
-        File outputFile = new File(args[1]);
+        File outputFile = new File("output.txt");
 
         try (FileOutputStream fos = new FileOutputStream(outputFile)) {
             fos.write(sb.toString().getBytes());
