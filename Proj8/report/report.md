@@ -1,7 +1,5 @@
 # Peoject8 Map Reduce
 
-<font size="4">
-
 - Lu Tian - 3180103740
 - Gu Yu - 3190105872
 
@@ -141,5 +139,3 @@ In this project, we design and implemented a map reduce program to solve the wor
 
 [1] https://pintia.cn/problem-sets/1531166467503390720
 [2] Dean, Jeffrey, and Sanjay Ghemawat. "MapReduce: simplified data processing on large clusters." Communications of the ACM 51.1 (2008): 107-113.
-
-</font>
