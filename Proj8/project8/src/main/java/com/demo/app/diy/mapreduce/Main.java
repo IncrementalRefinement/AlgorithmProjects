@@ -1,6 +1,7 @@
 package com.demo.app.diy.mapreduce;
 
 import com.demo.app.TextSplitter;
+import com.demo.app.WordCountSorter;
 
 import java.io.File;
 import java.util.*;
@@ -63,12 +64,14 @@ public class Main {
             mapList.add(reducer.getOutputMap());
         }
         Map<String, Integer> combineResult = combine(mapList);
-        for (Map.Entry<String, Integer> entry : combineResult.entrySet()) {
-            System.out.println(entry.getKey() + " : " + entry.getValue());
+        List<Map.Entry<String, Integer>> sortedEntryList = WordCountSorter.sort(combineResult.entrySet());
+        for (Map.Entry<String, Integer> entry : sortedEntryList) {
+            System.out.println(entry.getKey() + " " + entry.getValue());
         }
 
         Date endTine = new java.util.Date();
         long deltaTime = endTine.getTime() - beginTime.getTime();
+        System.out.println();
         System.out.println((double) deltaTime / 1000);
     }
 
