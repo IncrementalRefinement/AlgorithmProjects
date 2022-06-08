@@ -4,8 +4,6 @@ import com.demo.app.TextSplitter;
 
 import java.io.File;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Main {
 
@@ -17,7 +15,7 @@ public class Main {
 
         List<Mapper> mappers = new ArrayList<>(MAPPER_NUM);
         List<Reducer> reducers = new ArrayList<>(REDUCER_NUM);
-        ExecutorService executorService = Executors.newCachedThreadPool();
+        // ExecutorService executorService = Executors.newCachedThreadPool();
 
         for (int i = 0; i < MAPPER_NUM; i++) {
             mappers.add(new Mapper());
